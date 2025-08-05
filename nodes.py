@@ -10,10 +10,19 @@ class ASPLatentGenerator:
     
     @classmethod
     def INPUT_TYPES(cls):
+        # Create aspect ratio options with resolution info
+        aspect_ratio_options = [
+            "1:1 (Square) - Flux: 1024×1024, Qwen: 1328×1328, SDXL: 1024×1024",
+            "4:3 (Standard) - Flux: 1280×960, Qwen: 1472×1140, SDXL: 1024×768",
+            "3:2 (Photo) - Flux: 1152×768, Qwen: 1536×1024, SDXL: 1152×768",
+            "16:9 (Widescreen) - Flux: 1344×768, Qwen: 1664×928, SDXL: 1024×576",
+            "21:9 (Ultrawide) - Flux: 1792×768, Qwen: 1984×864, SDXL: 1344×576"
+        ]
+        
         return {
             "required": {
                 "model_type": (["Flux", "Qwen Image", "SDXL"], {"default": "Flux"}),
-                "aspect_ratio": (["1:1", "4:3", "3:2", "16:9", "21:9"], {"default": "16:9"}),
+                "aspect_ratio": (aspect_ratio_options, {"default": "16:9 (Widescreen) - Flux: 1344×768, Qwen: 1664×928, SDXL: 1024×576"}),
                 "orientation": (["Portrait", "Landscape"], {"default": "Portrait"}),
                 "multiplier": ("FLOAT", {"default": 1.0, "min": 0.1, "max": 10.0, "step": 0.1}),
                 "batch_size": ("INT", {"default": 1, "min": 1, "max": 64}),
@@ -53,8 +62,11 @@ class ASPLatentGenerator:
         return multiple * round(value / multiple)
 
     def generate(self, model_type, aspect_ratio, orientation, multiplier, batch_size):
+        # Extract actual aspect ratio from dropdown text (e.g., "1:1 (Square) - Flux: 1024×1024..." -> "1:1")
+        actual_aspect_ratio = aspect_ratio.split(" ")[0]
+        
         # Get base resolution
-        width, height = self.MODEL_RESOLUTIONS[model_type][aspect_ratio]
+        width, height = self.MODEL_RESOLUTIONS[model_type][actual_aspect_ratio]
         
         # Apply orientation
         if orientation == "Portrait" and width > height:
