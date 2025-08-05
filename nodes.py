@@ -218,9 +218,9 @@ NODE_CLASS_MAPPINGS = {
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "CYHFluxASPLatentGenerator": "🔹 Flux Aspect Ratio",
-    "CYHQwenASPLatentGenerator": "🔹 Qwen Aspect Ratio",
-    "CYHSDXLASPLatentGenerator": "🔹 SDXL Aspect Ratio"
+    "CYHFluxASPLatentGenerator": "🔹 CYH Flux Aspect Ratio",
+    "CYHQwenASPLatentGenerator": "🔹 CYH Qwen Aspect Ratio",
+    "CYHSDXLASPLatentGenerator": "🔹 CYH SDXL Aspect Ratio"
 }
 
 # Add aux_id metadata for ComfyUI
