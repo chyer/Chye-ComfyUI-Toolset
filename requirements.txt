@@ -1,0 +1,3 @@
+# Required dependencies for ASPLatent Generator
+torch>=2.0.0
+comfyui>=1.0.0
