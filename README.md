@@ -1,4 +1,4 @@
-# ComfyUI ASPLatent Generator
+# ComfyUI CYH Aspect Ratio
 
 A ComfyUI custom node that generates empty latent images with model-specific aspect ratios and resolutions.
 
@@ -17,7 +17,7 @@ A ComfyUI custom node that generates empty latent images with model-specific asp
 
 ## Usage
 
-1. Add the **🔹 ASP Latent Generator** node to your workflow
+1. Add the **🔹 CYH Aspect Ratio** node to your workflow
 2. Configure settings:
    - **Model Type**: Select your target model
    - **Aspect Ratio**: Choose desired ratio
@@ -31,7 +31,7 @@ A ComfyUI custom node that generates empty latent images with model-specific asp
 
 ### Basic Generation
 ```
-[ASP Latent Generator] → [KSampler] → [VAE Decode]
+[CYH Aspect Ratio] → [KSampler] → [VAE Decode]
 ```
 
 ### Multiplier Example
