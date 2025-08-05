@@ -207,9 +207,6 @@ class CYHSDXLASPLatentGenerator:
         
         return ({"samples": latent},)
 
-WEB_DIRECTORY = "./web"
-__version__ = "1.0.0"
-
 NODE_CLASS_MAPPINGS = {
     "CYHFluxASPLatentGenerator": CYHFluxASPLatentGenerator,
     "CYHQwenASPLatentGenerator": CYHQwenASPLatentGenerator,
