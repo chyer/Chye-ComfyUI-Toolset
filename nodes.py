@@ -7,6 +7,7 @@ class CYHFluxASPLatentGenerator:
     """
     Generates empty latent images with Flux-specific aspect ratios and resolutions
     """
+    aux_id = "chye/asp-latent"
     
     @classmethod
     def INPUT_TYPES(cls):
@@ -75,6 +76,7 @@ class CYHQwenASPLatentGenerator:
     """
     Generates empty latent images with Qwen Image-specific aspect ratios and resolutions
     """
+    aux_id = "chye/asp-latent"
     
     @classmethod
     def INPUT_TYPES(cls):
@@ -143,6 +145,7 @@ class CYHSDXLASPLatentGenerator:
     """
     Generates empty latent images with SDXL-specific aspect ratios and resolutions
     """
+    aux_id = "chye/asp-latent"
     
     @classmethod
     def INPUT_TYPES(cls):
@@ -219,11 +222,6 @@ NODE_CLASS_MAPPINGS = {
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "CYHFluxASPLatentGenerator": "🔹 CYH Flux Aspect Ratio",
-    "CYHQwenASPLatentGenerator": "🔹 CYH Qwen Aspect Ratio",
+    "CYHQwenASPLatentGenerator": "🔹 CYH Qwen Aspect Ratio", 
     "CYHSDXLASPLatentGenerator": "🔹 CYH SDXL Aspect Ratio"
 }
-
-# Add aux_id metadata for ComfyUI
-for node_class in NODE_CLASS_MAPPINGS.values():
-    if not hasattr(node_class, 'aux_id'):
-        node_class.aux_id = "chye/asp-latent"
