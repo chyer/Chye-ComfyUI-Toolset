@@ -3,7 +3,7 @@ import math
 from comfy.sd import VAE
 from nodes import common_ksampler
 
-class FluxASPLatentGenerator:
+class CYHFluxASPLatentGenerator:
     """
     Generates empty latent images with Flux-specific aspect ratios and resolutions
     """
@@ -63,7 +63,7 @@ class FluxASPLatentGenerator:
         
         return ({"samples": latent},)
 
-class QwenASPLatentGenerator:
+class CYHQwenASPLatentGenerator:
     """
     Generates empty latent images with Qwen Image-specific aspect ratios and resolutions
     """
@@ -123,7 +123,7 @@ class QwenASPLatentGenerator:
         
         return ({"samples": latent},)
 
-class SDXLASPLatentGenerator:
+class CYHSDXLASPLatentGenerator:
     """
     Generates empty latent images with SDXL-specific aspect ratios and resolutions
     """
@@ -184,13 +184,13 @@ class SDXLASPLatentGenerator:
         return ({"samples": latent},)
 
 NODE_CLASS_MAPPINGS = {
-    "FluxASPLatentGenerator": FluxASPLatentGenerator,
-    "QwenASPLatentGenerator": QwenASPLatentGenerator,
-    "SDXLASPLatentGenerator": SDXLASPLatentGenerator
+    "CYHFluxASPLatentGenerator": CYHFluxASPLatentGenerator,
+    "CYHQwenASPLatentGenerator": CYHQwenASPLatentGenerator,
+    "CYHSDXLASPLatentGenerator": CYHSDXLASPLatentGenerator
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "FluxASPLatentGenerator": "🔹 Flux Aspect Ratio",
-    "QwenASPLatentGenerator": "🔹 Qwen Aspect Ratio", 
-    "SDXLASPLatentGenerator": "🔹 SDXL Aspect Ratio"
+    "CYHFluxASPLatentGenerator": "🔹 Flux Aspect Ratio",
+    "CYHQwenASPLatentGenerator": "🔹 Qwen Aspect Ratio",
+    "CYHSDXLASPLatentGenerator": "🔹 SDXL Aspect Ratio"
 }
