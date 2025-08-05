@@ -28,6 +28,14 @@ class CYHFluxASPLatentGenerator:
     RETURN_TYPES = ("LATENT",)
     FUNCTION = "generate"
     CATEGORY = "latent"
+    
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return ""
+    
+    @classmethod
+    def VALIDATE_INPUTS(cls, **kwargs):
+        return True
 
     MODEL_RESOLUTIONS = {
         "1:1": (1024, 1024),
@@ -88,6 +96,14 @@ class CYHQwenASPLatentGenerator:
     RETURN_TYPES = ("LATENT",)
     FUNCTION = "generate"
     CATEGORY = "latent"
+    
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return ""
+    
+    @classmethod
+    def VALIDATE_INPUTS(cls, **kwargs):
+        return True
 
     MODEL_RESOLUTIONS = {
         "1:1": (1328, 1328),
@@ -148,6 +164,14 @@ class CYHSDXLASPLatentGenerator:
     RETURN_TYPES = ("LATENT",)
     FUNCTION = "generate"
     CATEGORY = "latent"
+    
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return ""
+    
+    @classmethod
+    def VALIDATE_INPUTS(cls, **kwargs):
+        return True
 
     MODEL_RESOLUTIONS = {
         "1:1": (1024, 1024),
@@ -183,6 +207,10 @@ class CYHSDXLASPLatentGenerator:
         
         return ({"samples": latent},)
 
+# Set aux_id for ComfyUI workflow validation
+WEB_DIRECTORY = "./web"
+__version__ = "1.0.0"
+
 NODE_CLASS_MAPPINGS = {
     "CYHFluxASPLatentGenerator": CYHFluxASPLatentGenerator,
     "CYHQwenASPLatentGenerator": CYHQwenASPLatentGenerator,
@@ -194,3 +222,8 @@ NODE_DISPLAY_NAME_MAPPINGS = {
     "CYHQwenASPLatentGenerator": "🔹 Qwen Aspect Ratio",
     "CYHSDXLASPLatentGenerator": "🔹 SDXL Aspect Ratio"
 }
+
+# Add aux_id metadata for ComfyUI
+for node_class in NODE_CLASS_MAPPINGS.values():
+    if not hasattr(node_class, 'aux_id'):
+        node_class.aux_id = "chye/asp-latent"
