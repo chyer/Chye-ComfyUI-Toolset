@@ -207,7 +207,6 @@ class CYHSDXLASPLatentGenerator:
         
         return ({"samples": latent},)
 
-# Set aux_id for ComfyUI workflow validation
 WEB_DIRECTORY = "./web"
 __version__ = "1.0.0"
 
