@@ -7,7 +7,7 @@ class CYHFluxASPLatentGenerator:
     """
     Generates empty latent images with Flux-specific aspect ratios and resolutions
     """
-    aux_id = "chyer/Chye-ASPLatent"
+    aux_id = "Test/Testee"
     
     @classmethod
     def INPUT_TYPES(cls):
@@ -76,7 +76,7 @@ class CYHQwenASPLatentGenerator:
     """
     Generates empty latent images with Qwen Image-specific aspect ratios and resolutions
     """
-    aux_id = "chyer/Chye-ASPLatent"
+    aux_id = "Test/Testee"
     
     @classmethod
     def INPUT_TYPES(cls):
@@ -145,7 +145,7 @@ class CYHSDXLASPLatentGenerator:
     """
     Generates empty latent images with SDXL-specific aspect ratios and resolutions
     """
-    aux_id = "chyer/Chye-ASPLatent"
+    aux_id = "Test/Testee"
     
     @classmethod
     def INPUT_TYPES(cls):
