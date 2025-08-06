@@ -1,0 +1,31 @@
+[project]
+name = "chye-asplatent"
+version = "1.0.0"
+description = "ComfyUI custom node for generating aspect ratio specific latents for Flux, Qwen, and SDXL models"
+authors = [
+    {name = "chyer", email = "chyer@mac.com"}
+]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "torch",
+]
+
+[project.urls]
+Homepage = "https://github.com/chyer/Chye-ASPLatent"
+Repository = "https://github.com/chyer/Chye-ASPLatent"
+
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["*"]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+    "black",
+    "flake8"
+]
