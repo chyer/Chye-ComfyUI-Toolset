@@ -9,6 +9,9 @@ class CYHFluxASPLatentGenerator:
     """
     aux_id = "Test/Testee"
     
+    def __init__(self):
+        print("DEBUG: CYHFluxASPLatentGenerator loaded with aux_id:", self.aux_id)
+    
     @classmethod
     def INPUT_TYPES(cls):
         return {
