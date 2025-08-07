@@ -5,15 +5,52 @@ Latent generation tools for Chye ComfyUI Toolset
 import torch
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from shared.constants import (
-    MODEL_RESOLUTIONS, ASPECT_RATIOS, LATENT_CATEGORY,
-    DEFAULT_MULTIPLIER, MIN_MULTIPLIER, MAX_MULTIPLIER, MULTIPLIER_STEP,
-    DEFAULT_BATCH_SIZE, MIN_BATCH_SIZE, MAX_BATCH_SIZE,
-    DEFAULT_ORIENTATION, ORIENTATIONS
-)
-from shared.helpers import parse_aspect_ratio, calculate_final_dimensions
+# Add parent directory to Python path for ComfyUI compatibility
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+if parent_dir not in sys.path:
+    sys.path.append(parent_dir)
+
+try:
+    from shared.constants import (
+        MODEL_RESOLUTIONS, ASPECT_RATIOS, LATENT_CATEGORY,
+        DEFAULT_MULTIPLIER, MIN_MULTIPLIER, MAX_MULTIPLIER, MULTIPLIER_STEP,
+        DEFAULT_BATCH_SIZE, MIN_BATCH_SIZE, MAX_BATCH_SIZE,
+        DEFAULT_ORIENTATION, ORIENTATIONS
+    )
+    from shared.helpers import parse_aspect_ratio, calculate_final_dimensions
+except ImportError:
+    # Fallback import for ComfyUI environments
+    import importlib.util
+    
+    # Import constants
+    constants_path = os.path.join(parent_dir, "shared", "constants.py")
+    spec = importlib.util.spec_from_file_location("constants", constants_path)
+    constants = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(constants)
+    
+    MODEL_RESOLUTIONS = constants.MODEL_RESOLUTIONS
+    ASPECT_RATIOS = constants.ASPECT_RATIOS
+    LATENT_CATEGORY = constants.LATENT_CATEGORY
+    DEFAULT_MULTIPLIER = constants.DEFAULT_MULTIPLIER
+    MIN_MULTIPLIER = constants.MIN_MULTIPLIER
+    MAX_MULTIPLIER = constants.MAX_MULTIPLIER
+    MULTIPLIER_STEP = constants.MULTIPLIER_STEP
+    DEFAULT_BATCH_SIZE = constants.DEFAULT_BATCH_SIZE
+    MIN_BATCH_SIZE = constants.MIN_BATCH_SIZE
+    MAX_BATCH_SIZE = constants.MAX_BATCH_SIZE
+    DEFAULT_ORIENTATION = constants.DEFAULT_ORIENTATION
+    ORIENTATIONS = constants.ORIENTATIONS
+    
+    # Import helpers
+    helpers_path = os.path.join(parent_dir, "shared", "helpers.py")
+    spec = importlib.util.spec_from_file_location("helpers", helpers_path)
+    helpers = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(helpers)
+    
+    parse_aspect_ratio = helpers.parse_aspect_ratio
+    calculate_final_dimensions = helpers.calculate_final_dimensions
 
 
 class CYHLatentFluxAspectRatio:
