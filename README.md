@@ -13,7 +13,11 @@ A ComfyUI custom node that generates empty latent images with model-specific asp
 ## Installation
 
 1. Copy the `Chye_ASPLatent` folder to your ComfyUI `custom_nodes` directory
-2. Restart ComfyUI
+2. **Important**: Create a file named `.cnr-id` in the `.git` folder with content `Chye-ASPlatent` to avoid workflow errors
+   ```
+   echo "Chye-ASPlatent" > .git/.cnr-id
+   ```
+3. Restart ComfyUI
 
 ## Usage
 
