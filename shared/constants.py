@@ -67,3 +67,94 @@ ORIENTATIONS = ["Portrait", "Landscape"]
 
 # Node categories
 LATENT_CATEGORY = "latent"
+
+# Phone screen resolutions
+PHONE_RESOLUTIONS = {
+    "16:9": (1080, 1920),
+    "19.5:9": (1080, 2340),
+    "20:9": (1080, 2400),
+    "18:9": (1080, 2160)
+}
+
+# Phone aspect ratio display options
+PHONE_ASPECT_RATIOS = [
+    "16:9 (Standard) - 1080×1920",
+    "19.5:9 (Modern Tall) - 1080×2340",
+    "20:9 (Ultra Tall) - 1080×2400",
+    "18:9 (Tall) - 1080×2160"
+]
+
+# Default orientation for phone screens
+DEFAULT_PHONE_ORIENTATION = "Portrait"
+
+# Video resolutions
+VIDEO_RESOLUTIONS = {
+    "16:9": (1920, 1080),
+    "21:9": (1920, 810),
+    "4:3": (1024, 768),
+    "9:16": (1080, 1920)
+}
+
+# Video aspect ratio display options
+VIDEO_ASPECT_RATIOS = [
+    "16:9 (Standard) - 1920×1080",
+    "21:9 (Cinema) - 1920×810",
+    "4:3 (Traditional) - 1024×768",
+    "9:16 (Portrait) - 1080×1920"
+]
+
+# Default orientations for video formats
+DEFAULT_VIDEO_ORIENTATIONS = {
+    "16:9": "Landscape",
+    "21:9": "Landscape",
+    "4:3": "Landscape",
+    "9:16": "Portrait"
+}
+
+# Social media resolutions
+SOCIAL_RESOLUTIONS = {
+    "Instagram Square (1:1)": (1080, 1080),
+    "Instagram Portrait (4:5)": (1080, 1350),
+    "Instagram Landscape (1.91:1)": (1080, 608),
+    "Instagram Stories (9:16)": (1080, 1920),
+    "TikTok Standard (9:16)": (1080, 1920),
+    "TikTok Wide (16:9)": (1920, 1080),
+    "YouTube Standard (16:9)": (1920, 1080),
+    "YouTube Shorts (9:16)": (1080, 1920),
+    "Facebook Feed (1.91:1)": (1200, 630),
+    "Facebook Stories (9:16)": (1080, 1920),
+    "Twitter Tweet (16:9)": (1200, 675),
+    "Twitter Header (3:1)": (1500, 500)
+}
+
+# Social media aspect ratio display options
+SOCIAL_ASPECT_RATIOS = [
+    "Instagram Square (1:1) - 1080×1080",
+    "Instagram Portrait (4:5) - 1080×1350",
+    "Instagram Landscape (1.91:1) - 1080×608",
+    "Instagram Stories (9:16) - 1080×1920",
+    "TikTok Standard (9:16) - 1080×1920",
+    "TikTok Wide (16:9) - 1920×1080",
+    "YouTube Standard (16:9) - 1920×1080",
+    "YouTube Shorts (9:16) - 1080×1920",
+    "Facebook Feed (1.91:1) - 1200×630",
+    "Facebook Stories (9:16) - 1080×1920",
+    "Twitter Tweet (16:9) - 1200×675",
+    "Twitter Header (3:1) - 1500×500"
+]
+
+# Default orientations for social media formats
+DEFAULT_SOCIAL_ORIENTATIONS = {
+    "Instagram Square (1:1)": "Landscape",
+    "Instagram Portrait (4:5)": "Portrait",
+    "Instagram Landscape (1.91:1)": "Landscape",
+    "Instagram Stories (9:16)": "Portrait",
+    "TikTok Standard (9:16)": "Portrait",
+    "TikTok Wide (16:9)": "Landscape",
+    "YouTube Standard (16:9)": "Landscape",
+    "YouTube Shorts (9:16)": "Portrait",
+    "Facebook Feed (1.91:1)": "Landscape",
+    "Facebook Stories (9:16)": "Portrait",
+    "Twitter Tweet (16:9)": "Landscape",
+    "Twitter Header (3:1)": "Landscape"
+}

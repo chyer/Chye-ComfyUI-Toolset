@@ -1,7 +1,7 @@
 [project]
 name = "chye-comfyui-toolset"
 description = "A comprehensive toolset of ComfyUI custom nodes for latent generation, image processing, and workflow utilities"
-version = "2.0.0"
+version = "2.1.0"
 license = { file = "LICENSE" }
 
 [project.urls]

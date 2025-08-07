@@ -10,6 +10,10 @@ def parse_aspect_ratio(aspect_ratio_text: str) -> str:
     """Extract actual aspect ratio from dropdown text (e.g., '16:9 (Widescreen) - 1344×768' -> '16:9')"""
     return aspect_ratio_text.split(" ")[0]
 
+def parse_social_media_key(social_media_text: str) -> str:
+    """Extract social media key from dropdown text (e.g., 'Instagram Square (1:1) - 1080×1080' -> 'Instagram Square (1:1)')"""
+    return social_media_text.split(" - ")[0]
+
 def apply_orientation(width: int, height: int, orientation: str) -> tuple[int, int]:
     """Apply orientation to dimensions, swapping if needed"""
     if orientation == "Portrait" and width > height:
