@@ -1,13 +1,13 @@
 [project]
-name = "chye-asplatent"
-description = "ComfyUI custom node for generating aspect ratio specific latents for Flux, Qwen, and SDXL models"
-version = "1.0.0"
+name = "chye-comfyui-toolset"
+description = "A comprehensive toolset of ComfyUI custom nodes for latent generation, image processing, and workflow utilities"
+version = "2.0.0"
 license = { file = "LICENSE" }
 
 [project.urls]
-Repository = "https://github.com/chyer/Chye-ASPLatent"
+Repository = "https://github.com/chyer/Chye-ComfyUI-Toolset"
 
 [tool.comfy]
 PublisherId = "chyer"
-DisplayName = "Chye-ASPLatent"
+DisplayName = "Chye-ComfyUI-Toolset"
 Icon = ""

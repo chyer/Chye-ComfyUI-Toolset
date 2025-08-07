@@ -1,3 +1,23 @@
-from .nodes import NODE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS
+"""
+Chye ComfyUI Toolset - A comprehensive collection of ComfyUI custom nodes
+"""
+
+from categories.latent_tools import (
+    NODE_CLASS_MAPPINGS as LATENT_CLASS_MAPPINGS,
+    NODE_DISPLAY_NAME_MAPPINGS as LATENT_DISPLAY_MAPPINGS
+)
+
+# Combine all category mappings
+NODE_CLASS_MAPPINGS = {}
+NODE_DISPLAY_NAME_MAPPINGS = {}
+
+# Add latent tools
+NODE_CLASS_MAPPINGS.update(LATENT_CLASS_MAPPINGS)
+NODE_DISPLAY_NAME_MAPPINGS.update(LATENT_DISPLAY_MAPPINGS)
+
+# Future categories will be added here:
+# from categories.image_tools import NODE_CLASS_MAPPINGS as IMAGE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS as IMAGE_DISPLAY_MAPPINGS
+# NODE_CLASS_MAPPINGS.update(IMAGE_CLASS_MAPPINGS)
+# NODE_DISPLAY_NAME_MAPPINGS.update(IMAGE_DISPLAY_MAPPINGS)
 
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']
