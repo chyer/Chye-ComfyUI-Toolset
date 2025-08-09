@@ -36,3 +36,8 @@ def calculate_final_dimensions(width: int, height: int, orientation: str, multip
     final_height = round_to_multiple(final_height * multiplier)
     
     return final_width, final_height
+
+def sanitize_filename(filename):
+    """Remove invalid characters from filename"""
+    import re
+    return re.sub(r'[<>:"/\\|?*]', '', filename).strip()

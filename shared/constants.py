@@ -68,6 +68,7 @@ ORIENTATIONS = ["Portrait", "Landscape"]
 # Node categories
 LATENT_CATEGORY = "latent"
 MATH_CATEGORY = "math"
+FILE_CATEGORY = "file"
 
 # Math node constants
 DEFAULT_MULTIPLIER_VALUE = 32
