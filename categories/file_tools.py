@@ -67,6 +67,7 @@ class CYHFolderFilenameBuilderNode:
         }
 
     RETURN_TYPES = ("STRING", "STRING")
+    RETURN_NAMES = ("full_path", "filename")
     FUNCTION = "build_path"
     CATEGORY = FILE_CATEGORY
     
