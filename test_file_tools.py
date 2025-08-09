@@ -26,7 +26,9 @@ def test_folder_filename_builder():
         subfolder="images"
     )
     print(f"Test 1 - Default values: {result[0]}")
+    print(f"Test 1 - Filename only: {result[1]}")
     assert result[0] == "MyProject/images/image01", f"Expected 'MyProject/images/image01', got '{result[0]}'"
+    assert result[1] == "image01", f"Expected 'image01', got '{result[1]}'"
     
     # Test case 2: No subfolder
     result = node.build_path(
@@ -37,7 +39,9 @@ def test_folder_filename_builder():
         subfolder="images"
     )
     print(f"Test 2 - No subfolder: {result[0]}")
+    print(f"Test 2 - Filename only: {result[1]}")
     assert result[0] == "MyProject/image01", f"Expected 'MyProject/image01', got '{result[0]}'"
+    assert result[1] == "image01", f"Expected 'image01', got '{result[1]}'"
     
     # Test case 3: Different delimiter
     result = node.build_path(
@@ -48,7 +52,9 @@ def test_folder_filename_builder():
         subfolder="images"
     )
     print(f"Test 3 - Underscore delimiter: {result[0]}")
+    print(f"Test 3 - Filename only: {result[1]}")
     assert result[0] == "MyProject_images_image01", f"Expected 'MyProject_images_image01', got '{result[0]}'"
+    assert result[1] == "image01", f"Expected 'image01', got '{result[1]}'"
     
     # Test case 4: Empty project name
     result = node.build_path(
@@ -59,7 +65,9 @@ def test_folder_filename_builder():
         subfolder="images"
     )
     print(f"Test 4 - Empty project name: {result[0]}")
+    print(f"Test 4 - Filename only: {result[1]}")
     assert result[0] == "UntitledProject/images/image01", f"Expected 'UntitledProject/images/image01', got '{result[0]}'"
+    assert result[1] == "image01", f"Expected 'image01', got '{result[1]}'"
     
     # Test case 5: Empty filename
     result = node.build_path(
@@ -70,7 +78,9 @@ def test_folder_filename_builder():
         subfolder="images"
     )
     print(f"Test 5 - Empty filename: {result[0]}")
+    print(f"Test 5 - Filename only: {result[1]}")
     assert result[0] == "MyProject/images/untitled", f"Expected 'MyProject/images/untitled', got '{result[0]}'"
+    assert result[1] == "untitled", f"Expected 'untitled', got '{result[1]}'"
     
     # Test case 6: Invalid characters
     result = node.build_path(
@@ -81,7 +91,9 @@ def test_folder_filename_builder():
         subfolder="im/ages"
     )
     print(f"Test 6 - Invalid characters: {result[0]}")
+    print(f"Test 6 - Filename only: {result[1]}")
     assert result[0] == "MyProject/images/image01", f"Expected 'MyProject/images/image01', got '{result[0]}'"
+    assert result[1] == "image01", f"Expected 'image01', got '{result[1]}'"
     
     # Test case 7: Empty subfolder with use_subfolders=True
     result = node.build_path(
@@ -92,7 +104,9 @@ def test_folder_filename_builder():
         subfolder=""
     )
     print(f"Test 7 - Empty subfolder with use_subfolders=True: {result[0]}")
+    print(f"Test 7 - Filename only: {result[1]}")
     assert result[0] == "MyProject/image01", f"Expected 'MyProject/image01', got '{result[0]}'"
+    assert result[1] == "image01", f"Expected 'image01', got '{result[1]}'"
     
     print("\nAll tests passed successfully!")
 

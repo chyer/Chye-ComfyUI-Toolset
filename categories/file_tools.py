@@ -66,7 +66,7 @@ class CYHFolderFilenameBuilderNode:
             }
         }
 
-    RETURN_TYPES = ("STRING",)
+    RETURN_TYPES = ("STRING", "STRING")
     FUNCTION = "build_path"
     CATEGORY = FILE_CATEGORY
     
@@ -101,7 +101,7 @@ class CYHFolderFilenameBuilderNode:
         # Join components with the selected delimiter
         full_path = delimiter.join(path_components)
         
-        return (full_path,)
+        return (full_path, filename)
 
 
 # Node registration for this category
