@@ -19,6 +19,10 @@ try:
         NODE_CLASS_MAPPINGS as MATH_CLASS_MAPPINGS,
         NODE_DISPLAY_NAME_MAPPINGS as MATH_DISPLAY_MAPPINGS
     )
+    from categories.file_tools import (
+        NODE_CLASS_MAPPINGS as FILE_CLASS_MAPPINGS,
+        NODE_DISPLAY_NAME_MAPPINGS as FILE_DISPLAY_MAPPINGS
+    )
 except ImportError:
     # Fallback for ComfyUI environments
     import importlib.util
@@ -38,6 +42,14 @@ except ImportError:
     
     MATH_CLASS_MAPPINGS = math_tools.NODE_CLASS_MAPPINGS
     MATH_DISPLAY_MAPPINGS = math_tools.NODE_DISPLAY_NAME_MAPPINGS
+    
+    # Import file tools
+    spec = importlib.util.spec_from_file_location("file_tools", os.path.join(current_dir, "categories", "file_tools.py"))
+    file_tools = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(file_tools)
+    
+    FILE_CLASS_MAPPINGS = file_tools.NODE_CLASS_MAPPINGS
+    FILE_DISPLAY_MAPPINGS = file_tools.NODE_DISPLAY_NAME_MAPPINGS
 
 # Combine all category mappings
 NODE_CLASS_MAPPINGS = {}
@@ -50,6 +62,10 @@ NODE_DISPLAY_NAME_MAPPINGS.update(LATENT_DISPLAY_MAPPINGS)
 # Add math tools
 NODE_CLASS_MAPPINGS.update(MATH_CLASS_MAPPINGS)
 NODE_DISPLAY_NAME_MAPPINGS.update(MATH_DISPLAY_MAPPINGS)
+
+# Add file tools
+NODE_CLASS_MAPPINGS.update(FILE_CLASS_MAPPINGS)
+NODE_DISPLAY_NAME_MAPPINGS.update(FILE_DISPLAY_MAPPINGS)
 
 # Future categories will be added here:
 # from categories.image_tools import NODE_CLASS_MAPPINGS as IMAGE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS as IMAGE_DISPLAY_MAPPINGS
