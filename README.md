@@ -15,6 +15,7 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 
 ### 🔸 Post Process Tools
 - **Realistic Film Grain**: Apply photographic film grain simulation with ISO control
+- **ARRI Halation Effect**: Simulate film bloom around highlights with red-orange tint
 - **Spatially Correlated Noise**: Advanced noise generation using scipy for realistic grain patterns
 - **Color Channel Control**: Option for monochrome or colored grain effects
 
@@ -96,11 +97,19 @@ Find the nodes under the **post_process** category:
   - **Strength**: Overall grain intensity (0.0 to 1.0)
   - **ISO**: Simulated film sensitivity (100-6400)
   - **Grain Size**: Particle size control (1.0-10.0)
-  - **Colored**: Toggle between monochrome and colored grain
+  - **Colored**: Toggle between monochrome or colored grain
 
-#### Example Workflow:
+- **🎬 CYH Post Process | ARRI Halation** - Apply ARRI-style film bloom effect
+  - **Threshold**: Highlight detection threshold (0-255)
+  - **Blur Size**: Glow effect size (1-101, odd numbers)
+  - **Intensity**: Halation strength (0.0 to 1.0)
+
+#### Example Workflows:
 ```
 [KSampler] → [VAE Decode] → [🎬 CYH Post Process | Film Grain]
+```
+```
+[KSampler] → [VAE Decode] → [🎬 CYH Post Process | ARRI Halation]
 ```
 
 ## 📱 Phone Screen Resolutions

@@ -143,11 +143,114 @@ class CYHFilmGrainNode:
         return (result,)
 
 
+def arri_halation_effect(image_tensor, threshold=220, blur_size=25, intensity=0.6):
+    """
+    Apply ARRI-style halation effect to simulate film bloom around highlights
+    
+    Args:
+        image_tensor: Input image tensor (B, H, W, C)
+        threshold: Highlight threshold (0-255)
+        blur_size: Gaussian blur kernel size (odd number)
+        intensity: Halation effect strength (0.0 to 1.0)
+    
+    Returns:
+        Tensor with applied halation effect
+    """
+    import cv2
+    import numpy as np
+    
+    # Convert to numpy
+    image_np = image_tensor.cpu().numpy()
+    
+    # Convert from (B, H, W, C) to (H, W, C) for single image processing
+    if len(image_np.shape) == 4:
+        image_np = image_np[0]  # Take first image in batch
+    
+    # Convert from float [0,1] to uint8 [0,255]
+    image_uint8 = (image_np * 255).astype(np.uint8)
+    
+    # Convert BGR to RGB (OpenCV uses BGR, ComfyUI uses RGB)
+    image_bgr = cv2.cvtColor(image_uint8, cv2.COLOR_RGB2BGR)
+    
+    # Convert to float32 for precision
+    img_float = image_bgr.astype(np.float32) / 255.0
+
+    # Step 1: Extract Highlights (luminance)
+    lum = cv2.cvtColor(image_bgr, cv2.COLOR_BGR2GRAY)
+    _, highlights = cv2.threshold(lum, threshold, 255, cv2.THRESH_BINARY)
+    highlights = highlights.astype(np.float32) / 255.0
+
+    # Step 2: Create halation color mask (red-orange tint)
+    # Start with zero image, add shifted values in R and G channels
+    halation_mask = np.zeros_like(img_float)
+    halation_mask[:, :, 2] = highlights * 1.0     # enhance red channel (BGR order: B=0, G=1, R=2)
+    halation_mask[:, :, 1] = highlights * 0.5     # add some green for orange tint
+
+    # Step 3: Blur the mask to create glow
+    # Ensure blur_size is odd
+    blur_size = max(1, blur_size)
+    if blur_size % 2 == 0:
+        blur_size += 1
+        
+    glow = cv2.GaussianBlur(halation_mask, (blur_size, blur_size), 0)
+
+    # Step 4: Additive blend glow onto original
+    result = np.clip(img_float + glow * intensity, 0, 1)
+
+    # Convert back to RGB and uint8
+    result_uint8 = (result * 255).astype(np.uint8)
+    result_rgb = cv2.cvtColor(result_uint8, cv2.COLOR_BGR2RGB)
+    
+    # Convert back to float [0,1] and restore batch dimension
+    result_float = result_rgb.astype(np.float32) / 255.0
+    result_float = np.expand_dims(result_float, axis=0)  # Add batch dimension
+    
+    # Convert back to tensor
+    return torch.from_numpy(result_float).to(image_tensor.device)
+
+
+class CYHARRHalationNode:
+    """
+    A post-processing node that applies ARRI-style halation effect to images.
+    Simulates the film bloom around highlights with customizable parameters.
+    """
+    
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE",),
+                "threshold": ("INT", {"default": 220, "min": 0, "max": 255, "step": 1}),
+                "blur_size": ("INT", {"default": 25, "min": 1, "max": 101, "step": 2}),
+                "intensity": ("FLOAT", {"default": 0.6, "min": 0.0, "max": 1.0, "step": 0.01}),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    FUNCTION = "apply_halation"
+    CATEGORY = POST_PROCESS_CATEGORY
+    
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return ""
+    
+    @classmethod
+    def VALIDATE_INPUTS(cls, **kwargs):
+        return True
+
+    def apply_halation(self, image, threshold, blur_size, intensity):
+        # Apply ARRI halation effect to the image
+        result = arri_halation_effect(image, threshold, blur_size, intensity)
+        return (result,)
+
+
 # Node registration for this category
 NODE_CLASS_MAPPINGS = {
     "CYHFilmGrainNode": CYHFilmGrainNode,
+    "CYHARRHalationNode": CYHARRHalationNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "CYHFilmGrainNode": "🎬 CYH Post Process | Film Grain",
+    "CYHARRHalationNode": "🎬 CYH Post Process | ARRI Halation",
 }
