@@ -5,6 +5,7 @@ Node categories for Chye ComfyUI Toolset
 from .latent_tools import *
 from .math_tools import *
 from .file_tools import *
+from .post_process import *
 
 # Import other category modules as they are added
 # from .image_tools import *
