@@ -244,13 +244,253 @@ class CYHARRHalationNode:
         return (result,)
 
 
+import cv2
+import functools
+import time
+from collections import OrderedDict
+
+# Cache for distortion maps to avoid recomputation
+_DISTORTION_CACHE = OrderedDict()
+_CACHE_MAX_SIZE = 10  # Keep last 10 distortion maps in cache
+
+def _get_cache_key(shape, k1, k2, k3, center_x, center_y):
+    """Generate a unique cache key for distortion parameters"""
+    return f"{shape[0]}x{shape[1]}_{k1:.6f}_{k2:.6f}_{k3:.6f}_{center_x:.3f}_{center_y:.3f}"
+
+def _clean_cache():
+    """Clean cache if it exceeds maximum size"""
+    while len(_DISTORTION_CACHE) > _CACHE_MAX_SIZE:
+        _DISTORTION_CACHE.popitem(last=False)
+
+def apply_barrel_distortion(image_tensor, k1, k2, k3, center_x=0.5, center_y=0.5, interpolation=cv2.INTER_LINEAR):
+    """
+    Apply barrel distortion to an image tensor using OpenCV remap
+    
+    Args:
+        image_tensor: Input image tensor (B, H, W, C)
+        k1, k2, k3: Barrel distortion coefficients
+        center_x, center_y: Normalized center coordinates (0.0-1.0)
+        interpolation: OpenCV interpolation method
+        
+    Returns:
+        Tensor with applied barrel distortion
+    """
+    import cv2
+    import numpy as np
+    
+    # Convert to numpy
+    image_np = image_tensor.cpu().numpy()
+    
+    # Convert from (B, H, W, C) to (H, W, C) for single image processing
+    if len(image_np.shape) == 4:
+        image_np = image_np[0]  # Take first image in batch
+    
+    height, width = image_np.shape[:2]
+    
+    # Calculate actual center coordinates
+    cx = int(center_x * width)
+    cy = int(center_y * height)
+    
+    # Generate cache key
+    cache_key = _get_cache_key((height, width), k1, k2, k3, center_x, center_y)
+    
+    # Check cache first
+    if cache_key in _DISTORTION_CACHE:
+        map_x, map_y = _DISTORTION_CACHE[cache_key]
+        # Move to end to mark as recently used
+        _DISTORTION_CACHE.move_to_end(cache_key)
+    else:
+        # Create coordinate grids
+        x, y = np.meshgrid(np.arange(width), np.arange(height))
+        
+        # Normalize coordinates to [-1, 1] range relative to center
+        x_norm = (x - cx) / (width / 2)
+        y_norm = (y - cy) / (height / 2)
+        
+        # Calculate radius from center
+        r = np.sqrt(x_norm**2 + y_norm**2)
+        
+        # Apply barrel distortion formula: r' = r * (1 + k1*r^2 + k2*r^4 + k3*r^6)
+        r_distorted = r * (1 + k1 * r**2 + k2 * r**4 + k3 * r**6)
+        
+        # Avoid division by zero
+        r_distorted = np.where(r == 0, 0, r_distorted)
+        scale = np.where(r == 0, 0, r_distorted / r)
+        
+        # Calculate distorted coordinates
+        x_distorted = scale * x_norm * (width / 2) + cx
+        y_distorted = scale * y_norm * (height / 2) + cy
+        
+        # Create mapping arrays for remap
+        map_x = x_distorted.astype(np.float32)
+        map_y = y_distorted.astype(np.float32)
+        
+        # Store in cache
+        _DISTORTION_CACHE[cache_key] = (map_x, map_y)
+        _clean_cache()
+    
+    # Apply distortion using remap
+    # Convert from RGB to BGR for OpenCV
+    image_bgr = cv2.cvtColor((image_np * 255).astype(np.uint8), cv2.COLOR_RGB2BGR)
+    distorted_bgr = cv2.remap(image_bgr, map_x, map_y, interpolation)
+    
+    # Convert back to RGB
+    distorted_rgb = cv2.cvtColor(distorted_bgr, cv2.COLOR_BGR2RGB)
+    
+    # Convert back to float [0,1] and restore batch dimension
+    result_float = distorted_rgb.astype(np.float32) / 255.0
+    result_float = np.expand_dims(result_float, axis=0)  # Add batch dimension
+    
+    # Convert back to tensor
+    return torch.from_numpy(result_float).to(image_tensor.device)
+
+def apply_chromatic_aberration(image_tensor, preset="none", intensity=1.0,
+                              k1_r=0.0, k2_r=0.0, k3_r=0.0,
+                              k1_g=0.0, k2_g=0.0, k3_g=0.0,
+                              k1_b=0.0, k2_b=0.0, k3_b=0.0,
+                              center_x=0.5, center_y=0.5, quality="fast"):
+    """
+    Apply chromatic aberration effect using barrel distortion per RGB channel
+    
+    Args:
+        image_tensor: Input image tensor
+        preset: Preset configuration ("none", "vintage", "modern", "extreme")
+        intensity: Master intensity multiplier (0.0-2.0)
+        k1_r, k2_r, k3_r: Red channel distortion coefficients
+        k1_g, k2_g, k3_g: Green channel distortion coefficients
+        k1_b, k2_b, k3_b: Blue channel distortion coefficients
+        center_x, center_y: Normalized center coordinates (0.0-1.0)
+        quality: Interpolation quality ("fast" or "high")
+        
+    Returns:
+        Tensor with applied chromatic aberration
+    """
+    # Apply preset configurations
+    if preset != "custom":
+        if preset == "none":
+            k1_r = k2_r = k3_r = 0.0
+            k1_g = k2_g = k3_g = 0.0
+            k1_b = k2_b = k3_b = 0.0
+        elif preset == "vintage":
+            k1_r, k2_r, k3_r = 0.15, 0.0, 0.0
+            k1_g, k2_g, k3_g = 0.0, 0.0, 0.0
+            k1_b, k2_b, k3_b = -0.15, 0.0, 0.0
+        elif preset == "modern":
+            k1_r, k2_r, k3_r = 0.08, -0.02, 0.0
+            k1_g, k2_g, k3_g = 0.0, 0.0, 0.0
+            k1_b, k2_b, k3_b = -0.08, 0.02, 0.0
+        elif preset == "extreme":
+            k1_r, k2_r, k3_r = 0.25, -0.1, 0.02
+            k1_g, k2_g, k3_g = 0.0, 0.0, 0.0
+            k1_b, k2_b, k3_b = -0.25, 0.1, -0.02
+    
+    # Apply intensity multiplier
+    k1_r *= intensity; k2_r *= intensity; k3_r *= intensity
+    k1_g *= intensity; k2_g *= intensity; k3_g *= intensity
+    k1_b *= intensity; k2_b *= intensity; k3_b *= intensity
+    
+    # Choose interpolation method
+    interpolation = cv2.INTER_LINEAR if quality == "fast" else cv2.INTER_CUBIC
+    
+    # Convert to numpy and split channels
+    image_np = image_tensor.cpu().numpy()
+    if len(image_np.shape) == 4:
+        image_np = image_np[0]  # Take first image in batch
+    
+    # Process each channel separately
+    channels = []
+    for i, (k1, k2, k3) in enumerate([(k1_r, k2_r, k3_r),
+                                     (k1_g, k2_g, k3_g),
+                                     (k1_b, k2_b, k3_b)]):
+        # Create single channel image
+        channel_img = np.zeros_like(image_np)
+        channel_img[:, :, i] = image_np[:, :, i]
+        
+        # Apply distortion to this channel
+        channel_tensor = torch.from_numpy(channel_img).to(image_tensor.device)
+        distorted_channel = apply_barrel_distortion(
+            channel_tensor, k1, k2, k3, center_x, center_y, interpolation
+        )
+        
+        # Extract the distorted channel
+        distorted_np = distorted_channel.cpu().numpy()[0]
+        channels.append(distorted_np[:, :, i:i+1])
+    
+    # Combine channels
+    result_np = np.concatenate(channels, axis=2)
+    result_np = np.expand_dims(result_np, axis=0)  # Add batch dimension
+    
+    # Convert back to tensor
+    return torch.from_numpy(result_np).to(image_tensor.device)
+
+
+class CYHChromaticAberrationNode:
+    """
+    A post-processing node that applies realistic chromatic aberration to images.
+    Simulates lens color fringing with barrel distortion per RGB channel.
+    """
+    
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE",),
+                "preset": (["none", "vintage", "modern", "extreme", "custom"], {"default": "vintage"}),
+                "intensity": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 2.0, "step": 0.01}),
+            },
+            "optional": {
+                "center_x": ("FLOAT", {"default": 0.5, "min": 0.0, "max": 1.0, "step": 0.01}),
+                "center_y": ("FLOAT", {"default": 0.5, "min": 0.0, "max": 1.0, "step": 0.01}),
+                "quality": (["fast", "high"], {"default": "fast"}),
+                "k1_r": ("FLOAT", {"default": 0.15, "min": -1.0, "max": 1.0, "step": 0.001}),
+                "k2_r": ("FLOAT", {"default": 0.0, "min": -0.5, "max": 0.5, "step": 0.001}),
+                "k3_r": ("FLOAT", {"default": 0.0, "min": -0.2, "max": 0.2, "step": 0.001}),
+                "k1_g": ("FLOAT", {"default": 0.0, "min": -1.0, "max": 1.0, "step": 0.001}),
+                "k2_g": ("FLOAT", {"default": 0.0, "min": -0.5, "max": 0.5, "step": 0.001}),
+                "k3_g": ("FLOAT", {"default": 0.0, "min": -0.2, "max": 0.2, "step": 0.001}),
+                "k1_b": ("FLOAT", {"default": -0.15, "min": -1.0, "max": 1.0, "step": 0.001}),
+                "k2_b": ("FLOAT", {"default": 0.0, "min": -0.5, "max": 0.5, "step": 0.001}),
+                "k3_b": ("FLOAT", {"default": 0.0, "min": -0.2, "max": 0.2, "step": 0.001}),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    FUNCTION = "apply_chromatic_aberration"
+    CATEGORY = POST_PROCESS_CATEGORY
+    
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return ""
+    
+    @classmethod
+    def VALIDATE_INPUTS(cls, **kwargs):
+        return True
+
+    def apply_chromatic_aberration(self, image, preset="vintage", intensity=1.0,
+                                  center_x=0.5, center_y=0.5, quality="fast",
+                                  k1_r=0.15, k2_r=0.0, k3_r=0.0,
+                                  k1_g=0.0, k2_g=0.0, k3_g=0.0,
+                                  k1_b=-0.15, k2_b=0.0, k3_b=0.0):
+        # Apply chromatic aberration effect
+        result = apply_chromatic_aberration(
+            image, preset, intensity,
+            k1_r, k2_r, k3_r,
+            k1_g, k2_g, k3_g,
+            k1_b, k2_b, k3_b,
+            center_x, center_y, quality
+        )
+        return (result,)
+
+
 # Node registration for this category
 NODE_CLASS_MAPPINGS = {
     "CYHFilmGrainNode": CYHFilmGrainNode,
     "CYHARRHalationNode": CYHARRHalationNode,
+    "CYHChromaticAberrationNode": CYHChromaticAberrationNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "CYHFilmGrainNode": "🎬 CYH Post Process | Film Grain",
     "CYHARRHalationNode": "🎬 CYH Post Process | ARRI Halation",
+    "CYHChromaticAberrationNode": "🌈 CYH Post Process | Chromatic Aberration",
 }

@@ -16,6 +16,7 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 ### 🔸 Post Process Tools
 - **Realistic Film Grain**: Apply photographic film grain simulation with ISO control
 - **ARRI Halation Effect**: Simulate film bloom around highlights with red-orange tint
+- **Chromatic Aberration**: Lens color fringing simulation with barrel distortion
 - **Spatially Correlated Noise**: Advanced noise generation using scipy for realistic grain patterns
 - **Color Channel Control**: Option for monochrome or colored grain effects
 
@@ -104,12 +105,28 @@ Find the nodes under the **post_process** category:
   - **Blur Size**: Glow effect size (1-101, odd numbers)
   - **Intensity**: Halation strength (0.0 to 1.0)
 
+- **🌈 CYH Post Process | Chromatic Aberration** - Apply lens color fringing effect
+  - **Preset**: Quick configurations (None, Vintage, Modern, Extreme, Custom)
+  - **Intensity**: Master effect strength multiplier (0.0-2.0)
+  - **Center**: Adjustable distortion center point (0.0-1.0)
+  - **Quality**: Fast (bilinear) or High (bicubic) interpolation
+  - **Advanced Controls**: Individual RGB channel distortion coefficients (k1, k2, k3)
+
+#### Preset Details:
+- **None**: No chromatic aberration
+- **Vintage**: Classic lens look with red/blue separation
+- **Modern**: Subtle modern lens character
+- **Extreme**: Strong artistic effect with complex distortion
+
 #### Example Workflows:
 ```
 [KSampler] → [VAE Decode] → [🎬 CYH Post Process | Film Grain]
 ```
 ```
 [KSampler] → [VAE Decode] → [🎬 CYH Post Process | ARRI Halation]
+```
+```
+[KSampler] → [VAE Decode] → [🌈 CYH Post Process | Chromatic Aberration]
 ```
 
 ## 📱 Phone Screen Resolutions
@@ -193,6 +210,7 @@ Chye-ComfyUI-Toolset/
 
 ## 🔄 Version History
 
+- **v2.2.0**: Added Chromatic Aberration node with realistic lens simulation
 - **v2.1.0**: Added Phone, Video, and Social Media aspect ratio nodes
 - **v2.0.0**: Complete restructure into modular toolset with shared utilities
 - **v1.x.x**: Individual aspect ratio nodes
