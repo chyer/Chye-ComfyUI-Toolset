@@ -13,10 +13,10 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 - **Precision Scaling**: Multiplier with automatic rounding to multiples of 32
 - **Batch Generation**: Support for multiple latents at once
 
-### 🔸 Image Tools *(Coming Soon)*
-- Image processing utilities
-- Format conversion tools
-- Enhancement filters
+### 🔸 Post Process Tools
+- **Realistic Film Grain**: Apply photographic film grain simulation with ISO control
+- **Spatially Correlated Noise**: Advanced noise generation using scipy for realistic grain patterns
+- **Color Channel Control**: Option for monochrome or colored grain effects
 
 ### 🔧 Utility Tools *(Coming Soon)*
 - Workflow helpers
@@ -31,6 +31,9 @@ cd custom_nodes
 git clone https://github.com/chyer/Chye-ComfyUI-Toolset.git
 cd Chye-ComfyUI-Toolset
 echo "Chye-ComfyUI-Toolset" > .git/.cnr-id
+
+# Install dependencies
+pip install -r requirements.txt
 ```
 
 ### Method 2: Manual Copy
@@ -39,7 +42,12 @@ echo "Chye-ComfyUI-Toolset" > .git/.cnr-id
    ```bash
    echo "Chye-ComfyUI-Toolset" > .git/.cnr-id
    ```
-3. Restart ComfyUI
+3. Install dependencies:
+   ```bash
+   cd Chye-ComfyUI-Toolset
+   pip install -r requirements.txt
+   ```
+4. Restart ComfyUI
 
 ## 🚀 Usage
 
@@ -78,6 +86,21 @@ Aspect: 16:9
 Orientation: Landscape
 Multiplier: 1.5
 → Output: 1536×864 latent
+```
+
+## 🎬 Post Process Tools
+
+Find the nodes under the **post_process** category:
+
+- **🎬 CYH Post Process | Film Grain** - Apply realistic film grain simulation
+  - **Strength**: Overall grain intensity (0.0 to 1.0)
+  - **ISO**: Simulated film sensitivity (100-6400)
+  - **Grain Size**: Particle size control (1.0-10.0)
+  - **Colored**: Toggle between monochrome and colored grain
+
+#### Example Workflow:
+```
+[KSampler] → [VAE Decode] → [🎬 CYH Post Process | Film Grain]
 ```
 
 ## 📱 Phone Screen Resolutions
@@ -135,6 +158,7 @@ Multiplier: 1.5
 Chye-ComfyUI-Toolset/
 ├── categories/
 │   ├── latent_tools.py      # Aspect ratio latent generators
+│   ├── post_process.py      # Image post-processing tools (film grain, etc.)
 │   ├── image_tools.py       # (Future) Image processing tools
 │   ├── utility_tools.py     # (Future) Workflow utilities
 │   └── __init__.py

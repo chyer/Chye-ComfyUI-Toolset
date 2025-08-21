@@ -1,3 +1,5 @@
-# Required dependencies for ASPLatent Generator
+# Required dependencies for Chye-ComfyUI-Toolset
 torch>=2.0.0
 comfyui>=1.0.0
+numpy>=1.21.0
+scipy>=1.7.0
