@@ -23,6 +23,10 @@ try:
         NODE_CLASS_MAPPINGS as FILE_CLASS_MAPPINGS,
         NODE_DISPLAY_NAME_MAPPINGS as FILE_DISPLAY_MAPPINGS
     )
+    from categories.post_process import (
+        NODE_CLASS_MAPPINGS as POST_PROCESS_CLASS_MAPPINGS,
+        NODE_DISPLAY_NAME_MAPPINGS as POST_PROCESS_DISPLAY_MAPPINGS
+    )
 except ImportError:
     # Fallback for ComfyUI environments
     import importlib.util
@@ -50,6 +54,14 @@ except ImportError:
     
     FILE_CLASS_MAPPINGS = file_tools.NODE_CLASS_MAPPINGS
     FILE_DISPLAY_MAPPINGS = file_tools.NODE_DISPLAY_NAME_MAPPINGS
+    
+    # Import post process tools
+    spec = importlib.util.spec_from_file_location("post_process", os.path.join(current_dir, "categories", "post_process.py"))
+    post_process = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(post_process)
+    
+    POST_PROCESS_CLASS_MAPPINGS = post_process.NODE_CLASS_MAPPINGS
+    POST_PROCESS_DISPLAY_MAPPINGS = post_process.NODE_DISPLAY_NAME_MAPPINGS
 
 # Combine all category mappings
 NODE_CLASS_MAPPINGS = {}
@@ -66,6 +78,10 @@ NODE_DISPLAY_NAME_MAPPINGS.update(MATH_DISPLAY_MAPPINGS)
 # Add file tools
 NODE_CLASS_MAPPINGS.update(FILE_CLASS_MAPPINGS)
 NODE_DISPLAY_NAME_MAPPINGS.update(FILE_DISPLAY_MAPPINGS)
+
+# Add post process tools
+NODE_CLASS_MAPPINGS.update(POST_PROCESS_CLASS_MAPPINGS)
+NODE_DISPLAY_NAME_MAPPINGS.update(POST_PROCESS_DISPLAY_MAPPINGS)
 
 # Future categories will be added here:
 # from categories.image_tools import NODE_CLASS_MAPPINGS as IMAGE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS as IMAGE_DISPLAY_MAPPINGS
