@@ -25,6 +25,15 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 
 ## 📦 Installation
 
+### Method 1: Git Clone (Recommended)
+```bash
+cd custom_nodes
+git clone https://github.com/chyer/Chye-ComfyUI-Toolset.git
+cd Chye-ComfyUI-Toolset
+echo "Chye-ComfyUI-Toolset" > .git/.cnr-id
+```
+
+### Method 2: Manual Copy
 1. Copy the `Chye-ComfyUI-Toolset` folder to your ComfyUI `custom_nodes` directory
 2. **Important**: Create a file named `.cnr-id` in the `.git` folder with content `Chye-ComfyUI-Toolset` to avoid workflow errors
    ```bash
