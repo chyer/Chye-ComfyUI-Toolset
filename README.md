@@ -22,7 +22,7 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 
 ### 🔤 Prompt Tools
 - **Multi-Provider LLM Integration**: DeepSeek, OpenAI, Anthropic, and custom providers
-- **Template-Based Enhancement**: File-based prompt templates with {prompt} placeholder
+- **Dual Template Systems**: File-based templates AND editable text input options
 - **Secure API Key Management**: File-based storage with gitignore protection
 - **Automatic Setup**: Dedicated setup node creates folder structure with examples
 - **Professional Templates**: Photography, cinematic, and high-detail enhancement templates
@@ -152,6 +152,14 @@ Find the nodes under the **prompt_tools** category:
   - **Temperature**: Creativity control (0.0-1.0)
   - **Max Tokens**: Response length limit (100-4000)
 
+- **🔤 CYH Prompt Tools | Enhancer (Editable)** - Alternative version with editable preprompt template
+  - **Prompt**: Input prompt to enhance (multiline text)
+  - **Preprompt Template**: Editable template text (must include {prompt} placeholder)
+  - **Provider**: LLM provider (DeepSeek, OpenAI, Anthropic, Custom)
+  - **API Key Override**: Optional API key override (skips file lookup)
+  - **Temperature**: Creativity control (0.0-1.0)
+  - **Max Tokens**: Response length limit (100-4000)
+
 ### Setup Instructions:
 
 1. **Run Setup Node First**: Use "🔤 CYH Prompt Tools | Setup" to create folder structure
@@ -177,6 +185,14 @@ Find the nodes under the **prompt_tools** category:
 ```
 [🔤 CYH Prompt Tools | Setup] → [Configure API Keys] → [🔤 CYH Prompt Tools | Enhancer]
 ```
+```
+[Text Input] → [🔤 CYH Prompt Tools | Enhancer (Editable)] → [KSampler]
+```
+
+### When to Use Each Version:
+- **File-based Enhancer**: Use when you want to maintain reusable templates across workflows
+- **Editable Enhancer**: Use when you want to quickly modify or experiment with preprompt text directly in the node
+- **Both versions support the same API providers and configuration options**
 
 ### Folder Structure:
 ```
@@ -285,6 +301,7 @@ Chye-ComfyUI-Toolset/
 
 ## 🔄 Version History
 
+- **v2.4.0**: Added PromptEnhancerEditable node with editable preprompt templates
 - **v2.3.0**: Added Prompt Enhancement tools with multi-provider LLM integration
 - **v2.2.0**: Added Chromatic Aberration node with realistic lens simulation
 - **v2.1.0**: Added Phone, Video, and Social Media aspect ratio nodes
