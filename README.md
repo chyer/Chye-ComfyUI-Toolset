@@ -15,7 +15,7 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 
 ### 🔸 Post Process Tools
 - **Realistic Film Grain**: Apply photographic film grain simulation with ISO control
-- **ARRI Halation Effect**: Simulate film bloom around highlights with red-orange tint
+- **ARRI Halation Effect**: Simulate film bloom around highlights with comprehensive color grading controls
 - **Chromatic Aberration**: Lens color fringing simulation with barrel distortion
 - **Spatially Correlated Noise**: Advanced noise generation using scipy for realistic grain patterns
 - **Color Channel Control**: Option for monochrome or colored grain effects
@@ -108,10 +108,16 @@ Find the nodes under the **post_process** category:
   - **Grain Size**: Particle size control (1.0-10.0)
   - **Colored**: Toggle between monochrome or colored grain
 
-- **🎬 CYH Post Process | ARRI Halation** - Apply ARRI-style film bloom effect
+- **🎬 CYH Post Process | ARRI Halation** - Apply ARRI-style film bloom effect with comprehensive color grading
   - **Threshold**: Highlight detection threshold (0-255)
   - **Blur Size**: Glow effect size (1-101, odd numbers)
   - **Intensity**: Halation strength (0.0 to 1.0)
+  - **Temperature**: Color temperature in Kelvin (1000-40000K) - warm to cool colors
+  - **Saturation**: Color intensity (0.0-2.0) - desaturated to oversaturated
+  - **Tint**: Green-magenta shift (-1.0 to 1.0) - green tint to magenta tint
+  - **Gamma**: Gamma correction (0.5-2.5) - flat to contrasty
+  - **Exposure**: Exposure adjustment in EV stops (-4.0 to 4.0) - dark to bright
+  - **Contrast**: Contrast adjustment (0.5-2.0) - low to high contrast
 
 - **🌈 CYH Post Process | Chromatic Aberration** - Apply lens color fringing effect
   - **Preset**: Quick configurations (None, Vintage, Modern, Extreme, Custom)
@@ -301,6 +307,7 @@ Chye-ComfyUI-Toolset/
 
 ## 🔄 Version History
 
+- **v2.5.0**: Enhanced ARRI Halation node with comprehensive color grading controls
 - **v2.4.0**: Added PromptEnhancerEditable node with editable preprompt templates
 - **v2.3.0**: Added Prompt Enhancement tools with multi-provider LLM integration
 - **v2.2.0**: Added Chromatic Aberration node with realistic lens simulation
