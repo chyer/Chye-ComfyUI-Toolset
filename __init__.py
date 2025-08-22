@@ -31,10 +31,6 @@ try:
         NODE_CLASS_MAPPINGS as PROMPT_TOOLS_CLASS_MAPPINGS,
         NODE_DISPLAY_NAME_MAPPINGS as PROMPT_TOOLS_DISPLAY_MAPPINGS
     )
-    from categories.image_tools import (
-        NODE_CLASS_MAPPINGS as IMAGE_CLASS_MAPPINGS,
-        NODE_DISPLAY_NAME_MAPPINGS as IMAGE_DISPLAY_MAPPINGS
-    )
 except ImportError:
     # Fallback for ComfyUI environments
     import importlib.util
@@ -79,13 +75,6 @@ except ImportError:
     PROMPT_TOOLS_CLASS_MAPPINGS = prompt_tools.NODE_CLASS_MAPPINGS
     PROMPT_TOOLS_DISPLAY_MAPPINGS = prompt_tools.NODE_DISPLAY_NAME_MAPPINGS
     
-    # Import image tools
-    spec = importlib.util.spec_from_file_location("image_tools", os.path.join(current_dir, "categories", "image_tools.py"))
-    image_tools = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(image_tools)
-    
-    IMAGE_CLASS_MAPPINGS = image_tools.NODE_CLASS_MAPPINGS
-    IMAGE_DISPLAY_MAPPINGS = image_tools.NODE_DISPLAY_NAME_MAPPINGS
 
 # Combine all category mappings
 NODE_CLASS_MAPPINGS = {}
@@ -111,8 +100,5 @@ NODE_DISPLAY_NAME_MAPPINGS.update(POST_PROCESS_DISPLAY_MAPPINGS)
 NODE_CLASS_MAPPINGS.update(PROMPT_TOOLS_CLASS_MAPPINGS)
 NODE_DISPLAY_NAME_MAPPINGS.update(PROMPT_TOOLS_DISPLAY_MAPPINGS)
 
-# Add image tools
-NODE_CLASS_MAPPINGS.update(IMAGE_CLASS_MAPPINGS)
-NODE_DISPLAY_NAME_MAPPINGS.update(IMAGE_DISPLAY_MAPPINGS)
 
 __all__ = ['NODE_CLASS_MAPPINGS', 'NODE_DISPLAY_NAME_MAPPINGS']

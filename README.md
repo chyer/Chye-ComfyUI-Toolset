@@ -29,11 +29,6 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 - **Professional Templates**: Photography, cinematic, and high-detail enhancement templates
 - **Error Handling**: Graceful degradation with comprehensive error reporting
 
-### 🎨 Image Tools
-- **Interactive Painter**: Freehand brush drawing with hard round brush and color selection
-- **Canvas System**: Real-time interactive drawing surface with mouse/touch support
-- **Alpha Channel Support**: Transparent background with proper mask output
-- **Image Input Support**: Draw on top of existing images or create new drawings
 
 ### 🔧 Utility Tools *(Coming Soon)*
 - Workflow helpers
@@ -340,9 +335,5 @@ Chye-ComfyUI-Toolset/
 This toolset is designed for extensibility. New categories and tools can be easily added following the established patterns in the `categories/` and `shared/` directories.
 
 ---
-
-## 🎨 Interactive Painter Documentation
-
-For detailed usage instructions, configuration options, and examples for the Interactive Painter node, see: [INTERACTIVE_PAINTER_README.md](INTERACTIVE_PAINTER_README.md)
 
 **Happy Creating! 🎨**
