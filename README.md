@@ -33,6 +33,7 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 - **Interactive Painter**: Freehand brush drawing with hard round brush and color selection
 - **Canvas System**: Real-time interactive drawing surface with mouse/touch support
 - **Alpha Channel Support**: Transparent background with proper mask output
+- **Image Input Support**: Draw on top of existing images or create new drawings
 
 ### 🔧 Utility Tools *(Coming Soon)*
 - Workflow helpers

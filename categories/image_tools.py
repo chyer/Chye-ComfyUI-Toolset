@@ -75,6 +75,9 @@ class CYHInteractivePainterNode:
                 "brush_size": ("INT", {"default": 20, "min": 1, "max": 100, "step": 1}),
                 "brush_color": ("STRING", {"default": "#FF0000"}),
             },
+            "optional": {
+                "image": ("IMAGE",),
+            },
             "hidden": {"unique_id": "UNIQUE_ID"},
         }
     
@@ -89,12 +92,24 @@ class CYHInteractivePainterNode:
         self.canvas_updated = False
         self.current_image = None
     
-    def paint(self, width, height, brush_size, brush_color, unique_id):
+    def paint(self, width, height, brush_size, brush_color, unique_id, image=None):
         # Register this node instance
         CYH_PAINTER_DICT[unique_id] = self
         
-        # Create initial blank canvas
-        if self.current_image is None:
+        # Handle image input - convert to PIL Image if provided
+        if image is not None:
+            # Convert tensor to PIL Image
+            image_np = image[0].cpu().numpy() * 255.0
+            image_np = image_np.astype(np.uint8)
+            
+            if image_np.shape[2] == 3:  # RGB
+                self.current_image = Image.fromarray(image_np, 'RGB').convert("RGBA")
+            elif image_np.shape[2] == 4:  # RGBA
+                self.current_image = Image.fromarray(image_np, 'RGBA')
+            else:
+                self.current_image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
+        elif self.current_image is None:
+            # Create initial blank canvas if no image provided
             self.current_image = Image.new("RGBA", (width, height), (0, 0, 0, 0))
         
         # Convert hex color to RGB tuple
@@ -159,9 +174,10 @@ class CYHInteractivePainterNode:
         return (image_tensor, mask_tensor)
     
     @classmethod
-    def IS_CHANGED(cls, width, height, brush_size, brush_color, unique_id):
+    def IS_CHANGED(cls, width, height, brush_size, brush_color, unique_id, image=None):
         # Force re-execution on parameter changes
-        return f"{width}_{height}_{brush_size}_{brush_color}"
+        image_hash = hash(str(image.shape)) if image is not None else "no_image"
+        return f"{width}_{height}_{brush_size}_{brush_color}_{image_hash}"
 
 # JavaScript for the frontend canvas interaction
 NODE_CLASS_MAPPINGS = {

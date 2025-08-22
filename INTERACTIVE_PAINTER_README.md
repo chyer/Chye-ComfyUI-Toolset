@@ -22,18 +22,27 @@ A simplified interactive painting node for ComfyUI that provides a hard round br
 ### Basic Setup
 
 1. Add the `Interactive Painter (CYH)` node to your workflow
-2. Configure the canvas dimensions (width/height)
+2. Configure the canvas dimensions (width/height) or connect an input image
 3. Set your desired brush size and color
 4. Click the node to open the interactive canvas
 5. Draw with your mouse or touch device
 6. The painted image will be output for use in your workflow
 
+### Drawing on Existing Images
+
+To draw on top of existing images:
+1. Connect any image output to the `image` input of the painter node
+2. The canvas will show the input image as the background
+3. Draw on top of the image using the brush tools
+4. The output will be the original image with your drawings on top
+
 ### Node Inputs
 
 - **width**: Canvas width in pixels (default: 512, range: 64-2048)
-- **height**: Canvas height in pixels (default: 512, range: 64-2048)  
+- **height**: Canvas height in pixels (default: 512, range: 64-2048)
 - **brush_size**: Brush diameter in pixels (default: 20, range: 1-100)
 - **brush_color**: Hex color code (default: #FF0000)
+- **image**: (Optional) Input image to draw on top of
 
 ### Node Outputs
 
