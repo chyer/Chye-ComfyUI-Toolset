@@ -360,6 +360,71 @@ def arri_halation_effect(image_tensor, threshold=220, blur_size=25, intensity=0.
     return torch.from_numpy(result_float).to(image_tensor.device)
 
 
+def apply_global_color_grading(image_tensor, temperature=6500, saturation=1.0, tint=0.0,
+                              gamma=1.0, exposure=0.0, contrast=1.0):
+    """
+    Apply comprehensive color grading to the entire image
+    
+    Args:
+        image_tensor: Input image tensor (B, H, W, C)
+        temperature: Color temperature in Kelvin (1000-40000)
+        saturation: Color saturation (0.0-2.0)
+        tint: Green-magenta tint shift (-1.0 to 1.0)
+        gamma: Gamma correction (0.5-2.5)
+        exposure: Exposure adjustment in EV stops (-4.0 to 4.0)
+        contrast: Contrast adjustment (0.5-2.0)
+    
+    Returns:
+        Tensor with applied color grading
+    """
+    import cv2
+    import numpy as np
+    
+    # Convert to numpy
+    image_np = image_tensor.cpu().numpy()
+    
+    # Convert from (B, H, W, C) to (H, W, C) for single image processing
+    if len(image_np.shape) == 4:
+        image_np = image_np[0]  # Take first image in batch
+    
+    # Convert from float [0,1] to uint8 [0,255]
+    image_uint8 = (image_np * 255).astype(np.uint8)
+    
+    # Convert BGR to RGB (OpenCV uses BGR, ComfyUI uses RGB)
+    image_bgr = cv2.cvtColor(image_uint8, cv2.COLOR_RGB2BGR)
+    
+    # Convert to float32 for precision
+    img_float = image_bgr.astype(np.float32) / 255.0
+    
+    # Process each pixel with color grading
+    height, width, channels = img_float.shape
+    result = np.zeros_like(img_float)
+    
+    for y in range(height):
+        for x in range(width):
+            # Get original pixel color (BGR to RGB)
+            original_rgb = (img_float[y, x, 2], img_float[y, x, 1], img_float[y, x, 0])
+            
+            # Apply color grading
+            graded_rgb = apply_color_grading(original_rgb, saturation, tint, gamma, exposure, contrast)
+            
+            # Store result (RGB to BGR)
+            result[y, x, 0] = graded_rgb[2]  # blue channel
+            result[y, x, 1] = graded_rgb[1]  # green channel
+            result[y, x, 2] = graded_rgb[0]  # red channel
+    
+    # Convert back to RGB and uint8
+    result_uint8 = (result * 255).astype(np.uint8)
+    result_rgb = cv2.cvtColor(result_uint8, cv2.COLOR_BGR2RGB)
+    
+    # Convert back to float [0,1] and restore batch dimension
+    result_float = result_rgb.astype(np.float32) / 255.0
+    result_float = np.expand_dims(result_float, axis=0)  # Add batch dimension
+    
+    # Convert back to tensor
+    return torch.from_numpy(result_float).to(image_tensor.device)
+
+
 class CYHARRHalationNode:
     """
     A post-processing node that applies ARRI-style halation effect to images.
@@ -398,6 +463,44 @@ class CYHARRHalationNode:
     def apply_halation(self, image, threshold, blur_size, intensity, temperature, saturation, tint, gamma, exposure, contrast):
         # Apply ARRI halation effect with comprehensive color grading
         result = arri_halation_effect(image, threshold, blur_size, intensity, temperature, saturation, tint, gamma, exposure, contrast)
+        return (result,)
+
+
+class CYHGlobalColorGradingNode:
+    """
+    A post-processing node that applies comprehensive color grading to the entire image.
+    Provides professional color controls including temperature, saturation, tint, gamma, exposure, and contrast.
+    """
+    
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "image": ("IMAGE",),
+                "temperature": ("INT", {"default": 6500, "min": 1000, "max": 40000, "step": 100}),
+                "saturation": ("FLOAT", {"default": 1.0, "min": 0.0, "max": 2.0, "step": 0.01}),
+                "tint": ("FLOAT", {"default": 0.0, "min": -1.0, "max": 1.0, "step": 0.01}),
+                "gamma": ("FLOAT", {"default": 1.0, "min": 0.5, "max": 2.5, "step": 0.01}),
+                "exposure": ("FLOAT", {"default": 0.0, "min": -4.0, "max": 4.0, "step": 0.1}),
+                "contrast": ("FLOAT", {"default": 1.0, "min": 0.5, "max": 2.0, "step": 0.01}),
+            },
+        }
+
+    RETURN_TYPES = ("IMAGE",)
+    FUNCTION = "apply_color_grading"
+    CATEGORY = POST_PROCESS_CATEGORY
+    
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return ""
+    
+    @classmethod
+    def VALIDATE_INPUTS(cls, **kwargs):
+        return True
+
+    def apply_color_grading(self, image, temperature, saturation, tint, gamma, exposure, contrast):
+        # Apply global color grading to the image
+        result = apply_global_color_grading(image, temperature, saturation, tint, gamma, exposure, contrast)
         return (result,)
 
 
@@ -643,11 +746,13 @@ class CYHChromaticAberrationNode:
 NODE_CLASS_MAPPINGS = {
     "CYHFilmGrainNode": CYHFilmGrainNode,
     "CYHARRHalationNode": CYHARRHalationNode,
+    "CYHGlobalColorGradingNode": CYHGlobalColorGradingNode,
     "CYHChromaticAberrationNode": CYHChromaticAberrationNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "CYHFilmGrainNode": "🎬 CYH Post Process | Film Grain",
     "CYHARRHalationNode": "🎬 CYH Post Process | ARRI Halation",
+    "CYHGlobalColorGradingNode": "🎨 CYH Post Process | Global Color Grading",
     "CYHChromaticAberrationNode": "🌈 CYH Post Process | Chromatic Aberration",
 }

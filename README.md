@@ -16,6 +16,7 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 ### 🔸 Post Process Tools
 - **Realistic Film Grain**: Apply photographic film grain simulation with ISO control
 - **ARRI Halation Effect**: Simulate film bloom around highlights with comprehensive color grading controls
+- **Global Color Grading**: Apply comprehensive color grading to entire images (temperature, saturation, tint, gamma, exposure, contrast)
 - **Chromatic Aberration**: Lens color fringing simulation with barrel distortion
 - **Spatially Correlated Noise**: Advanced noise generation using scipy for realistic grain patterns
 - **Color Channel Control**: Option for monochrome or colored grain effects
@@ -119,6 +120,14 @@ Find the nodes under the **post_process** category:
   - **Exposure**: Exposure adjustment in EV stops (-4.0 to 4.0) - dark to bright
   - **Contrast**: Contrast adjustment (0.5-2.0) - low to high contrast
 
+- **🎨 CYH Post Process | Global Color Grading** - Apply comprehensive color grading to entire images
+  - **Temperature**: Color temperature in Kelvin (1000-40000K) - warm to cool colors
+  - **Saturation**: Color intensity (0.0-2.0) - desaturated to oversaturated
+  - **Tint**: Green-magenta shift (-1.0 to 1.0) - green tint to magenta tint
+  - **Gamma**: Gamma correction (0.5-2.5) - flat to contrasty
+  - **Exposure**: Exposure adjustment in EV stops (-4.0 to 4.0) - dark to bright
+  - **Contrast**: Contrast adjustment (0.5-2.0) - low to high contrast
+
 - **🌈 CYH Post Process | Chromatic Aberration** - Apply lens color fringing effect
   - **Preset**: Quick configurations (None, Vintage, Modern, Extreme, Custom)
   - **Intensity**: Master effect strength multiplier (0.0-2.0)
@@ -141,6 +150,9 @@ Find the nodes under the **post_process** category:
 ```
 ```
 [KSampler] → [VAE Decode] → [🌈 CYH Post Process | Chromatic Aberration]
+```
+```
+[KSampler] → [VAE Decode] → [🎨 CYH Post Process | Global Color Grading]
 
 ## 🔤 Prompt Tools
 
@@ -307,6 +319,7 @@ Chye-ComfyUI-Toolset/
 
 ## 🔄 Version History
 
+- **v2.6.0**: Added Global Color Grading node with comprehensive color controls
 - **v2.5.0**: Enhanced ARRI Halation node with comprehensive color grading controls
 - **v2.4.0**: Added PromptEnhancerEditable node with editable preprompt templates
 - **v2.3.0**: Added Prompt Enhancement tools with multi-provider LLM integration
