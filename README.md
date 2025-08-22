@@ -20,6 +20,14 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 - **Spatially Correlated Noise**: Advanced noise generation using scipy for realistic grain patterns
 - **Color Channel Control**: Option for monochrome or colored grain effects
 
+### 🔤 Prompt Tools
+- **Multi-Provider LLM Integration**: DeepSeek, OpenAI, Anthropic, and custom providers
+- **Template-Based Enhancement**: File-based prompt templates with {prompt} placeholder
+- **Secure API Key Management**: File-based storage with gitignore protection
+- **Automatic Setup**: Dedicated setup node creates folder structure with examples
+- **Professional Templates**: Photography, cinematic, and high-detail enhancement templates
+- **Error Handling**: Graceful degradation with comprehensive error reporting
+
 ### 🔧 Utility Tools *(Coming Soon)*
 - Workflow helpers
 - Data conversion utilities
@@ -127,6 +135,65 @@ Find the nodes under the **post_process** category:
 ```
 ```
 [KSampler] → [VAE Decode] → [🌈 CYH Post Process | Chromatic Aberration]
+
+## 🔤 Prompt Tools
+
+Find the nodes under the **prompt_tools** category:
+
+- **🔤 CYH Prompt Tools | Setup** - Creates folder structure and example templates
+  - **Force Recreate**: Overwrite existing files (True/False)
+  - **Output**: Status message with setup results
+
+- **🔤 CYH Prompt Tools | Enhancer** - Uses LLM APIs to refine and enhance prompts
+  - **Prompt**: Input prompt to enhance (multiline text)
+  - **Template Path**: Path to template file (e.g., "providers/deepseek/professional_photo.txt")
+  - **Provider**: LLM provider (DeepSeek, OpenAI, Anthropic, Custom)
+  - **API Key Override**: Optional API key override (skips file lookup)
+  - **Temperature**: Creativity control (0.0-1.0)
+  - **Max Tokens**: Response length limit (100-4000)
+
+### Setup Instructions:
+
+1. **Run Setup Node First**: Use "🔤 CYH Prompt Tools | Setup" to create folder structure
+2. **Configure API Keys**: Edit files in `preprompts/api_keys/` with your actual API keys
+3. **Customize Templates**: Modify or create templates in `preprompts/` subdirectories
+4. **Use Enhancer**: Connect prompts to "🔤 CYH Prompt Tools | Enhancer" for refinement
+
+### Example Templates:
+- **Professional Photography**: Camera settings, lighting, composition techniques
+- **Cinematic Style**: Film terminology, director styles, visual storytelling
+- **High Detail**: Ultra-realistic textures, technical precision, intricate patterns
+
+### Supported Providers:
+- **DeepSeek**: Fast and cost-effective Chinese LLM
+- **OpenAI**: GPT-4 Turbo for high-quality enhancements
+- **Anthropic**: Claude models for nuanced prompt refinement
+- **Custom**: Template-only mode without API calls
+
+### Example Workflows:
+```
+[Text Input] → [🔤 CYH Prompt Tools | Enhancer] → [KSampler]
+```
+```
+[🔤 CYH Prompt Tools | Setup] → [Configure API Keys] → [🔤 CYH Prompt Tools | Enhancer]
+```
+
+### Folder Structure:
+```
+preprompts/
+├── api_keys/           # API key files (gitignored)
+│   ├── deepseek_api_key.txt
+│   ├── openai_api_key.txt
+│   └── anthropic_api_key.txt
+├── providers/          # Provider-specific templates
+│   ├── deepseek/
+│   ├── openai/
+│   └── anthropic/
+├── styles/             # Artistic style templates
+├── quality/            # Quality enhancement templates
+├── models/             # Model-specific optimizations
+└── custom/             # User-defined templates
+```
 ```
 
 ## 📱 Phone Screen Resolutions
@@ -185,6 +252,7 @@ Chye-ComfyUI-Toolset/
 ├── categories/
 │   ├── latent_tools.py      # Aspect ratio latent generators
 │   ├── post_process.py      # Image post-processing tools (film grain, etc.)
+│   ├── prompt_tools.py      # LLM-based prompt enhancement tools
 │   ├── image_tools.py       # (Future) Image processing tools
 │   ├── utility_tools.py     # (Future) Workflow utilities
 │   └── __init__.py
@@ -193,6 +261,13 @@ Chye-ComfyUI-Toolset/
 │   ├── validators.py        # Input validation utilities
 │   ├── helpers.py          # Shared utility functions
 │   └── __init__.py
+├── preprompts/              # Prompt enhancement templates and API keys
+│   ├── api_keys/           # API key files (gitignored)
+│   ├── providers/          # Provider-specific templates
+│   ├── styles/             # Artistic style templates
+│   ├── quality/            # Quality enhancement templates
+│   ├── models/             # Model-specific optimizations
+│   └── custom/             # User-defined templates
 ├── __init__.py             # Main entry point
 ├── pyproject.toml          # Project metadata
 └── README.md              # This file
@@ -210,6 +285,7 @@ Chye-ComfyUI-Toolset/
 
 ## 🔄 Version History
 
+- **v2.3.0**: Added Prompt Enhancement tools with multi-provider LLM integration
 - **v2.2.0**: Added Chromatic Aberration node with realistic lens simulation
 - **v2.1.0**: Added Phone, Video, and Social Media aspect ratio nodes
 - **v2.0.0**: Complete restructure into modular toolset with shared utilities

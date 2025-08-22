@@ -27,6 +27,10 @@ try:
         NODE_CLASS_MAPPINGS as POST_PROCESS_CLASS_MAPPINGS,
         NODE_DISPLAY_NAME_MAPPINGS as POST_PROCESS_DISPLAY_MAPPINGS
     )
+    from categories.prompt_tools import (
+        NODE_CLASS_MAPPINGS as PROMPT_TOOLS_CLASS_MAPPINGS,
+        NODE_DISPLAY_NAME_MAPPINGS as PROMPT_TOOLS_DISPLAY_MAPPINGS
+    )
 except ImportError:
     # Fallback for ComfyUI environments
     import importlib.util
@@ -62,6 +66,14 @@ except ImportError:
     
     POST_PROCESS_CLASS_MAPPINGS = post_process.NODE_CLASS_MAPPINGS
     POST_PROCESS_DISPLAY_MAPPINGS = post_process.NODE_DISPLAY_NAME_MAPPINGS
+    
+    # Import prompt tools
+    spec = importlib.util.spec_from_file_location("prompt_tools", os.path.join(current_dir, "categories", "prompt_tools.py"))
+    prompt_tools = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(prompt_tools)
+    
+    PROMPT_TOOLS_CLASS_MAPPINGS = prompt_tools.NODE_CLASS_MAPPINGS
+    PROMPT_TOOLS_DISPLAY_MAPPINGS = prompt_tools.NODE_DISPLAY_NAME_MAPPINGS
 
 # Combine all category mappings
 NODE_CLASS_MAPPINGS = {}
@@ -82,6 +94,10 @@ NODE_DISPLAY_NAME_MAPPINGS.update(FILE_DISPLAY_MAPPINGS)
 # Add post process tools
 NODE_CLASS_MAPPINGS.update(POST_PROCESS_CLASS_MAPPINGS)
 NODE_DISPLAY_NAME_MAPPINGS.update(POST_PROCESS_DISPLAY_MAPPINGS)
+
+# Add prompt tools
+NODE_CLASS_MAPPINGS.update(PROMPT_TOOLS_CLASS_MAPPINGS)
+NODE_DISPLAY_NAME_MAPPINGS.update(PROMPT_TOOLS_DISPLAY_MAPPINGS)
 
 # Future categories will be added here:
 # from categories.image_tools import NODE_CLASS_MAPPINGS as IMAGE_CLASS_MAPPINGS, NODE_DISPLAY_NAME_MAPPINGS as IMAGE_DISPLAY_MAPPINGS

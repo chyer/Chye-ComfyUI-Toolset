@@ -1,0 +1,3 @@
+# API keys should never be committed
+api_keys/*
+!api_keys/.gitkeep
