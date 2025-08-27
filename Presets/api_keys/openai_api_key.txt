@@ -1,0 +1,3 @@
+# Replace with your OpenAI API key
+# Format: sk-your-actual-api-key-here
+# Get from: https://platform.openai.com/api-keys

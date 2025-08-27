@@ -1,0 +1,3 @@
+# Replace with your Anthropic API key
+# Format: sk-your-actual-api-key-here
+# Get from: https://console.anthropic.com/settings/keys

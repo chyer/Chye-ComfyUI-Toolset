@@ -182,8 +182,8 @@ Find the nodes under the **prompt_tools** category:
 ### Setup Instructions:
 
 1. **Run Setup Node First**: Use "🔤 CYH Prompt Tools | Setup" to create folder structure
-2. **Configure API Keys**: Edit files in `preprompts/api_keys/` with your actual API keys
-3. **Customize Templates**: Modify or create templates in `preprompts/` subdirectories
+2. **Configure API Keys**: Edit files in `Presets/api_keys/` with your actual API keys
+3. **Customize Templates**: Modify or create templates in `Presets/Preprompts/` subdirectories
 4. **Use Enhancer**: Connect prompts to "🔤 CYH Prompt Tools | Enhancer" for refinement
 
 ### Example Templates:
@@ -215,19 +215,16 @@ Find the nodes under the **prompt_tools** category:
 
 ### Folder Structure:
 ```
-preprompts/
+Presets/
 ├── api_keys/           # API key files (gitignored)
 │   ├── deepseek_api_key.txt
 │   ├── openai_api_key.txt
 │   └── anthropic_api_key.txt
-├── providers/          # Provider-specific templates
-│   ├── deepseek/
-│   ├── openai/
-│   └── anthropic/
-├── styles/             # Artistic style templates
-├── quality/            # Quality enhancement templates
-├── models/             # Model-specific optimizations
-└── custom/             # User-defined templates
+├── Preprompts/         # Template files (.txt)
+│   ├── professional_photo.txt
+│   ├── cinematic.txt
+│   ├── high_detail.txt
+│   └── custom/         # User-defined templates
 ```
 ```
 
@@ -296,13 +293,9 @@ Chye-ComfyUI-Toolset/
 │   ├── validators.py        # Input validation utilities
 │   ├── helpers.py          # Shared utility functions
 │   └── __init__.py
-├── preprompts/              # Prompt enhancement templates and API keys
+├── Presets/                 # Prompt enhancement templates and API keys
 │   ├── api_keys/           # API key files (gitignored)
-│   ├── providers/          # Provider-specific templates
-│   ├── styles/             # Artistic style templates
-│   ├── quality/            # Quality enhancement templates
-│   ├── models/             # Model-specific optimizations
-│   └── custom/             # User-defined templates
+│   └── Preprompts/         # Template files (.txt)
 ├── __init__.py             # Main entry point
 ├── pyproject.toml          # Project metadata
 └── README.md              # This file

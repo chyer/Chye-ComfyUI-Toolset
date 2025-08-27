@@ -1,0 +1,3 @@
+# Replace with your DeepSeek API key
+# Format: sk-your-actual-api-key-here
+# Get from: https://platform.deepseek.com/api_keys
