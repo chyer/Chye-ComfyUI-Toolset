@@ -29,6 +29,12 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 - **Professional Templates**: Photography, cinematic, and high-detail enhancement templates
 - **Error Handling**: Graceful degradation with comprehensive error reporting
 
+### 📁 File Tools
+- **📁 CYH File | Folder Filename Builder** - Construct file paths with project name, subfolder, and filename
+- **📄 CYH File | Text File Loader** - Load text content from .txt files with trigger button and editable text box
+- **📄 CYH File | Text File Editor** - Editable text widget with action modes for controlling output behavior (use_input/use_edit_mute_input)
+- **🎬 CYH File | Video Loader** - Load video files from text paths for ComfyUI video processing
+
 
 ### 🔧 Utility Tools *(Coming Soon)*
 - Workflow helpers
@@ -227,7 +233,69 @@ Presets/
 │   └── custom/         # User-defined templates
 ```
 ```
+## 📁 File Tools
 
+Find the nodes under the **file** category:
+
+- **📁 CYH File | Folder Filename Builder** - Construct file paths with project name, subfolder, and filename
+  - **Project Name**: Base project identifier
+  - **Filename**: Output filename (without extension)
+  - **Use Subfolders**: Enable/disable subfolder organization
+  - **Delimiter**: Path separator (/ or \ or _ or -)
+  - **Subfolder**: Optional subfolder name
+
+- **📄 CYH File | Text File Loader** - Load text content from .txt files with trigger button and editable text box
+  - **File Path**: Path to .txt file (supports drag & drop)
+  - **Trigger**: Load File button to load content
+  - **Editable Text**: Loaded text content (editable)
+  - **Encoding**: Text encoding (utf-8, utf-16, ascii, latin-1)
+  - **Auto Load**: Automatically reload when file changes
+
+- **📄 CYH File | Text File Editor** - Editable text widget with action modes for controlling output behavior
+  - **Action**: Control output behavior (use_input/use_edit_mute_input)
+  - **Editable Text Widget**: Editable text content
+  - **Input Text**: Optional upstream text input
+
+- **🎬 CYH File | Video Loader** - Load video files from text paths for ComfyUI video processing
+  - **File Path**: Path to video file (supports drag & drop)
+  
+  
+  
+  
+
+### Action Modes:
+- **use_input**: Outputs connected text and updates widget display
+- **use_edit_mute_input**: Outputs widget text and mutes upstream input
+
+
+
+
+
+
+
+
+### Example Workflows:
+```
+[📄 CYH File | Text File Loader] → [📄 CYH File | Text File Editor] → [KSampler]
+```
+```
+[Text Input] → [📄 CYH File | Text File Editor] → [KSampler]
+```
+```
+[🎬 CYH File | Video Loader] → [Get Video Components] (for extracting frames and audio)
+```
+```
+[Video Generator] → [🎬 CYH File | Video Loader] (for loading generated videos)
+```
+```
+[File Path] → [🎬 CYH File | Video Loader] → [Video Processing Nodes] (for video processing workflows)
+```
+
+### When to Use Each Version:
+- **Text File Loader**: Use when you want to load text from .txt files
+- **Text File Editor**: Use when you want editable text with action modes and upstream muting
+- **Video Loader**: Use when you want to load video files from text paths for ComfyUI video processing
+- **Combined**: Use Text File Loader → Text File Editor for file loading with advanced editing features
 ## 📱 Phone Screen Resolutions
 
 | Aspect Ratio | Resolution | Description |
@@ -286,6 +354,8 @@ Chye-ComfyUI-Toolset/
 │   ├── post_process.py      # Image post-processing tools (film grain, etc.)
 │   ├── prompt_tools.py      # LLM-based prompt enhancement tools
 │   ├── image_tools.py       # Interactive painting and image processing tools
+│   ├── file_tools.py        # File handling tools (text, video, etc.)
+│   ├── video_tools.py       # Video loading tools for text path input
 │   ├── utility_tools.py     # (Future) Workflow utilities
 │   └── __init__.py
 ├── shared/
@@ -300,6 +370,7 @@ Chye-ComfyUI-Toolset/
 ├── pyproject.toml          # Project metadata
 └── README.md              # This file
 ```
+```
 
 ## 📝 Notes
 
@@ -313,6 +384,8 @@ Chye-ComfyUI-Toolset/
 
 ## 🔄 Version History
 
+- **v2.9.0**: Added Video Loader node for loading videos from text paths
+- **v2.8.0**: Added Text File Editor node with action modes (use_input/use_edit_mute_input) and UI widget updating
 - **v2.7.0**: Added Interactive Painter node with freehand brush drawing
 - **v2.6.0**: Added Global Color Grading node with comprehensive color controls
 - **v2.5.0**: Enhanced ARRI Halation node with comprehensive color grading controls
