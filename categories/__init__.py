@@ -6,6 +6,7 @@ from .latent_tools import *
 from .math_tools import *
 from .file_tools import *
 from .post_process import *
+from .video_tools import *
 
 # Import other category modules as they are added
 # from .image_tools import *

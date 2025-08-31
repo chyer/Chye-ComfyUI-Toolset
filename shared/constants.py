@@ -71,6 +71,7 @@ MATH_CATEGORY = "math"
 FILE_CATEGORY = "file"
 POST_PROCESS_CATEGORY = "post_process"
 PROMPT_TOOLS_CATEGORY = "prompt_tools"
+VIDEO_CATEGORY = "video"
 
 # Math node constants
 DEFAULT_MULTIPLIER_VALUE = 32
