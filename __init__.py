@@ -31,10 +31,6 @@ try:
         NODE_CLASS_MAPPINGS as PROMPT_TOOLS_CLASS_MAPPINGS,
         NODE_DISPLAY_NAME_MAPPINGS as PROMPT_TOOLS_DISPLAY_MAPPINGS
     )
-    from categories.video_tools import (
-        NODE_CLASS_MAPPINGS as VIDEO_CLASS_MAPPINGS,
-        NODE_DISPLAY_NAME_MAPPINGS as VIDEO_DISPLAY_MAPPINGS
-    )
 except ImportError:
     # Fallback for ComfyUI environments
     import importlib.util
@@ -79,13 +75,9 @@ except ImportError:
     PROMPT_TOOLS_CLASS_MAPPINGS = prompt_tools.NODE_CLASS_MAPPINGS
     PROMPT_TOOLS_DISPLAY_MAPPINGS = prompt_tools.NODE_DISPLAY_NAME_MAPPINGS
     
-    # Import video tools
-    spec = importlib.util.spec_from_file_location("video_tools", os.path.join(current_dir, "categories", "video_tools.py"))
-    video_tools = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(video_tools)
-    
-    VIDEO_CLASS_MAPPINGS = video_tools.NODE_CLASS_MAPPINGS
-    VIDEO_DISPLAY_MAPPINGS = video_tools.NODE_DISPLAY_NAME_MAPPINGS
+    # Video tools module doesn't exist yet
+    VIDEO_CLASS_MAPPINGS = {}
+    VIDEO_DISPLAY_MAPPINGS = {}
     
 
 # Combine all category mappings
@@ -112,9 +104,9 @@ NODE_DISPLAY_NAME_MAPPINGS.update(POST_PROCESS_DISPLAY_MAPPINGS)
 NODE_CLASS_MAPPINGS.update(PROMPT_TOOLS_CLASS_MAPPINGS)
 NODE_DISPLAY_NAME_MAPPINGS.update(PROMPT_TOOLS_DISPLAY_MAPPINGS)
 
-# Add video tools
-NODE_CLASS_MAPPINGS.update(VIDEO_CLASS_MAPPINGS)
-NODE_DISPLAY_NAME_MAPPINGS.update(VIDEO_DISPLAY_MAPPINGS)
+# Video tools module doesn't exist yet (commented out for future use)
+# NODE_CLASS_MAPPINGS.update(VIDEO_CLASS_MAPPINGS)
+# NODE_DISPLAY_NAME_MAPPINGS.update(VIDEO_DISPLAY_MAPPINGS)
 
 
 # API endpoints for web extensions
