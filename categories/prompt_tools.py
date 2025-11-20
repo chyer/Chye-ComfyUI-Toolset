@@ -865,15 +865,88 @@ class PromptEnhancerEditable:
             logger.error(error_msg)
             return (error_msg,)
 
+import random
+import re
+
+class PromptWildcardGenerator:
+    """
+    A node that generates randomized prompts by processing wildcard expressions.
+    Supports wildcards in the format {Text1|Text2|Text3} where one option is randomly selected.
+    Useful for models that don't natively support wildcards.
+    """
+    
+    @classmethod
+    def INPUT_TYPES(cls):
+        return {
+            "required": {
+                "prompt": ("STRING", {
+                    "multiline": True,
+                    "default": "A {beautiful|stunning|gorgeous} {landscape|cityscape|seascape} with {sunset|sunrise|clouds}",
+                    "placeholder": "Enter text with wildcards like {option1|option2|option3}"
+                }),
+                "seed": ("INT", {"default": 0, "min": 0, "max": 0xffffffffffffffff}),
+            }
+        }
+    
+    RETURN_TYPES = ("STRING",)
+    RETURN_NAMES = ("randomized_prompt",)
+    FUNCTION = "generate"
+    CATEGORY = PROMPT_TOOLS_CATEGORY
+    
+    @classmethod
+    def IS_CHANGED(cls, **kwargs):
+        return ""
+    
+    @classmethod
+    def VALIDATE_INPUTS(cls, **kwargs):
+        return True
+
+    def parse_wildcards(self, text):
+        """Parse wildcard expressions in the format {option1|option2|option3}"""
+        # Find all wildcard expressions
+        wildcard_pattern = r'\{([^{}]+)\}'
+        matches = re.findall(wildcard_pattern, text)
+        
+        # For each wildcard, split options and select one randomly
+        replacements = {}
+        for match in matches:
+            options = [opt.strip() for opt in match.split('|')]
+            if options:
+                selected = random.choice(options)
+                replacements[f"{{{match}}}"] = selected
+        
+        return replacements
+
+    def generate(self, prompt, seed):
+        """Generate randomized prompt by replacing wildcards"""
+        # Set random seed for reproducibility
+        random.seed(seed)
+        
+        # Parse wildcards and get replacements
+        replacements = self.parse_wildcards(prompt)
+        
+        # Apply replacements
+        result = prompt
+        for wildcard, replacement in replacements.items():
+            result = result.replace(wildcard, replacement)
+        
+        logger.info(f"Wildcard prompt generated. Original: {len(prompt)} chars, Result: {len(result)} chars")
+        logger.debug(f"Wildcard replacements: {replacements}")
+        
+        return (result,)
+
+
 # Node registration for this category
 NODE_CLASS_MAPPINGS = {
     "PromptToolsSetup": PromptToolsSetup,
     "PromptEnhancer": PromptEnhancer,
     "PromptEnhancerEditable": PromptEnhancerEditable,
+    "PromptWildcardGenerator": PromptWildcardGenerator,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
     "PromptToolsSetup": "🔤 CYH Prompt Tools | Setup",
     "PromptEnhancer": "🔤 CYH Prompt Tools | Enhancer",
     "PromptEnhancerEditable": "🔤 CYH Prompt Tools | Enhancer (Editable)",
+    "PromptWildcardGenerator": "🔤 CYH Prompt Tools | Wildcard Generator",
 }
