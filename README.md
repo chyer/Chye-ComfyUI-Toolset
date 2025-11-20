@@ -28,6 +28,7 @@ A comprehensive collection of ComfyUI custom nodes organized by category for enh
 - **Automatic Setup**: Dedicated setup node creates folder structure with examples
 - **Professional Templates**: Photography, cinematic, and high-detail enhancement templates
 - **Error Handling**: Graceful degradation with comprehensive error reporting
+- **Wildcard Generation**: Randomize prompts with {option1|option2|option3} syntax for models without native wildcard support
 
 ### 📁 File Tools
 - **📁 CYH File | Folder Filename Builder** - Construct file paths with project name, subfolder, and filename
@@ -219,6 +220,24 @@ Find the nodes under the **prompt_tools** category:
 - **Editable Enhancer**: Use when you want to quickly modify or experiment with preprompt text directly in the node
 - **Both versions support the same API providers and configuration options**
 
+### Wildcard Generator
+- **🔤 CYH Prompt Tools | Wildcard Generator** - Generate randomized prompts using wildcard syntax {option1|option2|option3}
+  - **Prompt**: Input text with wildcard expressions
+  - **Seed**: Random seed for reproducible results (0 for random)
+  - **Output**: Randomized prompt with wildcards replaced
+
+#### Wildcard Examples:
+- Input: "A {beautiful|stunning|gorgeous} {landscape|cityscape|seascape}"
+- Possible outputs: "A beautiful landscape", "A stunning cityscape", "A gorgeous seascape"
+
+#### Example Workflows:
+```
+[Text Input] → [🔤 CYH Prompt Tools | Wildcard Generator] → [KSampler]
+```
+```
+[🔤 CYH Prompt Tools | Wildcard Generator] → [🔤 CYH Prompt Tools | Enhancer] → [KSampler]
+```
+
 ### Folder Structure:
 ```
 Presets/
@@ -384,6 +403,7 @@ Chye-ComfyUI-Toolset/
 
 ## 🔄 Version History
 
+- **v2.10.0**: Added Wildcard Generator node for randomized prompts using {option1|option2|option3} syntax
 - **v2.9.0**: Added Video Loader node for loading videos from text paths
 - **v2.8.0**: Added Text File Editor node with action modes (use_input/use_edit_mute_input) and UI widget updating
 - **v2.7.0**: Added Interactive Painter node with freehand brush drawing
