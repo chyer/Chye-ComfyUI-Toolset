@@ -58,3 +58,8 @@ venv.bak/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Development artifacts
+plans/
+test_*.py
+verify_*.py

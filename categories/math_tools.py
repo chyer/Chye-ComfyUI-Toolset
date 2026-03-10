@@ -14,8 +14,8 @@ if parent_dir not in sys.path:
 try:
     from shared.constants import (
         MATH_CATEGORY,
-        DEFAULT_MULTIPLIER_VALUE, MIN_MULTIPLIER_VALUE, MAX_MULTIPLIER_VALUE, MULTIPLIER_VALUE_STEP,
-        DEFAULT_INCREMENT, MIN_INCREMENT, MAX_INCREMENT, INCREMENT_STEP
+        DEFAULT_AB_VALUE, MIN_AB_VALUE, MAX_AB_VALUE,
+        DEFAULT_DIVISOR
     )
     from shared.helpers import round_to_multiple
 except ImportError:
@@ -29,14 +29,10 @@ except ImportError:
     spec.loader.exec_module(constants)
     
     MATH_CATEGORY = constants.MATH_CATEGORY
-    DEFAULT_MULTIPLIER_VALUE = constants.DEFAULT_MULTIPLIER_VALUE
-    MIN_MULTIPLIER_VALUE = constants.MIN_MULTIPLIER_VALUE
-    MAX_MULTIPLIER_VALUE = constants.MAX_MULTIPLIER_VALUE
-    MULTIPLIER_VALUE_STEP = constants.MULTIPLIER_VALUE_STEP
-    DEFAULT_INCREMENT = constants.DEFAULT_INCREMENT
-    MIN_INCREMENT = constants.MIN_INCREMENT
-    MAX_INCREMENT = constants.MAX_INCREMENT
-    INCREMENT_STEP = constants.INCREMENT_STEP
+    DEFAULT_AB_VALUE = constants.DEFAULT_AB_VALUE
+    MIN_AB_VALUE = constants.MIN_AB_VALUE
+    MAX_AB_VALUE = constants.MAX_AB_VALUE
+    DEFAULT_DIVISOR = constants.DEFAULT_DIVISOR
     
     # Import helpers
     helpers_path = os.path.join(parent_dir, "shared", "helpers.py")
@@ -47,25 +43,44 @@ except ImportError:
     round_to_multiple = helpers.round_to_multiple
 
 
-class CYHResolutionMultiplierNode:
+class CYHABSwitchNode:
     """
-    A math node that outputs resolution values based on a multiplier.
-    The value field will increment/decrement in steps of the multiplier.
-    Perfect for use with resolution width/height inputs in ComfyUI.
-    For example, if the multiplier is 32, the value will snap to multiples of 32 (32, 64, 96, etc.).
+    A ComfyUI node that takes Width and Height inputs, ensures they are 
+    divisible by 32 (ComfyUI standard), and provides a switch to swap the output order.
+    
+    The UI step size is fixed at 32 to match ComfyUI's resolution requirements.
+    
+    Perfect for:
+    - Resolution validation and adjustment (32-pixel alignment)
+    - ComfyUI-compatible dimension processing
+    - Dimension swapping for orientation changes (portrait/landscape)
+    - VAE encoder/decoder compatible resolutions
     """
     
     @classmethod
     def INPUT_TYPES(cls):
         return {
             "required": {
-                "multiplier": ("INT", {"default": DEFAULT_MULTIPLIER_VALUE, "min": MIN_MULTIPLIER_VALUE, "max": MAX_MULTIPLIER_VALUE, "step": MULTIPLIER_VALUE_STEP}),
-                "width": ("INT", {"default": DEFAULT_MULTIPLIER_VALUE, "min": MIN_MULTIPLIER_VALUE, "max": MAX_MULTIPLIER_VALUE * 20, "step": MULTIPLIER_VALUE_STEP}),
-                "height": ("INT", {"default": DEFAULT_MULTIPLIER_VALUE, "min": MIN_MULTIPLIER_VALUE, "max": MAX_MULTIPLIER_VALUE * 20, "step": MULTIPLIER_VALUE_STEP}),
+                "width": ("INT", {
+                    "default": DEFAULT_AB_VALUE,
+                    "min": MIN_AB_VALUE,
+                    "max": MAX_AB_VALUE,
+                    "step": DEFAULT_DIVISOR  # Fixed 32-step for ComfyUI resolution standard
+                }),
+                "height": ("INT", {
+                    "default": DEFAULT_AB_VALUE,
+                    "min": MIN_AB_VALUE,
+                    "max": MAX_AB_VALUE,
+                    "step": DEFAULT_DIVISOR  # Fixed 32-step for ComfyUI resolution standard
+                }),
+                "swap_order": ("BOOLEAN", {
+                    "default": False
+                }),
             },
         }
 
     RETURN_TYPES = ("INT", "INT")
+    RETURN_NAMES = ("width", "height")
     FUNCTION = "calculate"
     CATEGORY = MATH_CATEGORY
     
@@ -74,21 +89,45 @@ class CYHResolutionMultiplierNode:
         return ""
     
     @classmethod
-    def VALIDATE_INPUTS(cls, **kwargs):
+    def VALIDATE_INPUTS(cls, width, height, **kwargs):
+        if width <= 0 or height <= 0:
+            return "Width and height must be positive integers"
+        
         return True
 
-    def calculate(self, multiplier, width, height):
-        # Round both width and height to the nearest multiple of the multiplier
-        result_width = round_to_multiple(width, multiplier)
-        result_height = round_to_multiple(height, multiplier)
-        return (result_width, result_height)
+    def calculate(self, width, height, swap_order):
+        """
+        Process the input values and return them in the specified order.
+        Values are automatically rounded to multiples of 32 (ComfyUI standard).
+        
+        Args:
+            width (int): Width value
+            height (int): Height value
+            swap_order (bool): Whether to swap the output order
+            
+        Returns:
+            tuple: (width, height) - processed values in specified order
+        """
+        
+        # Fixed divisor of 32 for ComfyUI resolution standard
+        divisor = DEFAULT_DIVISOR  # 32
+        
+        # Round both values to the nearest multiple of 32
+        processed_width = round_to_multiple(width, divisor)
+        processed_height = round_to_multiple(height, divisor)
+        
+        # Apply order swapping if requested
+        if swap_order:
+            return (processed_height, processed_width)
+        else:
+            return (processed_width, processed_height)
 
 
 # Node registration for this category
 NODE_CLASS_MAPPINGS = {
-    "CYHResolutionMultiplierNode": CYHResolutionMultiplierNode,
+    "CYHABSwitchNode": CYHABSwitchNode,
 }
 
 NODE_DISPLAY_NAME_MAPPINGS = {
-    "CYHResolutionMultiplierNode": "🔢 CYH Math | Resolution Multiplier",
+    "CYHABSwitchNode": "🔢 CYH Math | A B Switch Res 32 Step",
 }
